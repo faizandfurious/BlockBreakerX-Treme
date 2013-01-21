@@ -90,7 +90,7 @@ function draw(keyCode) {
 	//Draws the bar
 	//TODO: needs to draw everything on the screen
 
-	checkBounds(bar, canvas, keyCode);
+	checkBoundsOnInput(bar, canvas, keyCode);
 
 	if(ball.state === 0){
 		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
@@ -147,8 +147,8 @@ function draw(keyCode) {
 
 }
 
-//This function is used to check the bounds of various objects
-function checkBounds(obj, canvas, keyCode){
+//This function is used to check the bounds of various objects when the canvas receives input from the keyboard
+function checkBoundsOnInput(obj, canvas, keyCode){
 	//Left arrow key
 	if(keyCode === 37){
 		//Checks to see if the current move would place the bar offscreen
