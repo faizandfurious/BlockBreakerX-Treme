@@ -6,6 +6,12 @@ window.ctx = canvas.getContext("2d");
 //Bar speed multiplier
 window.speed = 1;
 
+window.onload = function(){
+	setInterval(function(){
+        move();
+		draw();
+	}, 20);
+};
 
 //Creating the grid to place boxes into.
 var boxGrid = function(){
@@ -37,6 +43,18 @@ var boxGrid = function(){
 
 }();
 
+//This function starts the ball's motion.
+function beginGame(){
+	if(ball.state === 0){
+		ball.state = 1;
+	}
+}
+
+function endGame(){
+	ball.state = 0;
+	draw();
+}
+
 
 
 //The bar object
@@ -47,7 +65,7 @@ var bar = function(){
 	exports.xcoord = 300;
 	exports.ycoord = 530;
 	exports.w = 80;
-	exports.h = 30;
+	exports.h = 10;
 	exports.image.src = "assets/bar.png";
 
 	return exports;
@@ -71,10 +89,14 @@ var ball = function(){
 	//Not moving, 1 means moving
 	exports.state = 0;
 
+	//The degree angle of the ball's trajectory
+	exports.direction = 90;
+	exports.speed = 1;
+
 	exports.xcoord = 5;
 	exports.ycoord = 5;
-	exports.w = 5;
-	exports.h = 5;
+	exports.w = 20;
+	exports.h = 20;
 
 	exports.image = new Image();
 	exports.image.src = "assets/ball.png";
@@ -83,10 +105,23 @@ var ball = function(){
 	return exports;
 }();
 
+
+function drawBall(){
+	if(ball.state === 0){
+		ball.xcoord = (bar.xcoord + bar.w/2);
+		ball.ycoord = bar.ycoord - ball.h;
+		window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+	}
+	else{
+		checkBounds(ball);
+		ball.ycoord = ball.ycoord - 3;
+		window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+	}
+}
+
 function draw(keyCode) {
 	//Clears the entire canvas
 	window.ctx.clearRect(0, 0, canvas.width, canvas.height);
-
 	//Draws the bar
 	//TODO: needs to draw everything on the screen
     if(keyCode !== undefined)
@@ -94,11 +129,9 @@ function draw(keyCode) {
 	    checkBoundsOnInput(bar, canvas, keyCode);
     }
 
-	if(ball.state === 0){
-		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
-	}
+	window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
 
-
+	drawBall();
 
 	//Draw the grid
 	// //First the columns
@@ -148,6 +181,15 @@ function draw(keyCode) {
 
 }
 
+function checkBounds(obj){
+	if(obj.xcoord < 0 || obj.xcoord > canvas.width){
+		endGame();
+	}
+	else if(obj.ycoord < 0 || obj.ycoord > canvas.height){
+		endGame();
+	}
+}
+
 //This function is used to check the bounds of various objects when the canvas receives input from the keyboard
 function checkBoundsOnInput(obj, canvas, keyCode){
 	//Left arrow key
@@ -166,8 +208,6 @@ function checkBoundsOnInput(obj, canvas, keyCode){
 		}
 	}
 }
-
-
 
 //Event Listeners
 
@@ -199,9 +239,9 @@ function onKeyDown(event) {
         if(direction ==="stop")
             direction = "right";
 	}
-	//Space bar. Testing speed ability
+	//Space bar. Used to begin game.
 	else if(event.keyCode == 32){
-		window.speed = 5;
+		beginGame();
 	}
 
 	draw(event.keyCode);
@@ -217,28 +257,20 @@ canvas.addEventListener('keyup', onKeyUp, false);
 
 function moveBar()
 {
-    if(direction === "stop")
-    {
-        draw();
-        return;
+    switch(direction) {
+        case "left":
+    	    bar.xcoord = bar.xcoord - 5*window.speed;
+            break;
+        case "right":
+    	    bar.xcoord = bar.xcoord + 5*window.speed;
+            break;
+        default:
+            break;
     }
-    if(direction === "left")
-    {
-    	bar.xcoord = bar.xcoord - 5*window.speed;
-    draw();
-        return;
-    }
-    if(direction === "right")
-    {
-    	bar.xcoord = bar.xcoord + 5*window.speed;
-    draw();
-        return;
-    }
-	
+    
 
 }
 
-setInterval(moveBar, 20);
 
 
 
