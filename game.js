@@ -42,6 +42,18 @@ var boxGrid = function(){
 
 }();
 
+//This function starts the ball's motion.
+function beginGame(){
+	if(ball.state === 0){
+		ball.state = 1;
+	}
+}
+
+function endGame(){
+	ball.state = 0;
+	draw();
+}
+
 
 
 //The bar object
@@ -76,6 +88,10 @@ var ball = function(){
 	//Not moving, 1 means moving
 	exports.state = 0;
 
+	//The degree angle of the ball's trajectory
+	exports.direction = 90;
+	exports.speed = 1;
+
 	exports.xcoord = 5;
 	exports.ycoord = 5;
 	exports.w = 20;
@@ -88,10 +104,23 @@ var ball = function(){
 	return exports;
 }();
 
+
+function drawBall(){
+	if(ball.state === 0){
+		ball.xcoord = (bar.xcoord + bar.w/2);
+		ball.ycoord = bar.ycoord - ball.h;
+		window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+	}
+	else{
+		checkBounds(ball);
+		ball.ycoord = ball.ycoord - 3;
+		window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+	}
+}
+
 function draw(keyCode) {
 	//Clears the entire canvas
 	window.ctx.clearRect(0, 0, canvas.width, canvas.height);
-
 	//Draws the bar
 	//TODO: needs to draw everything on the screen
 
@@ -99,11 +128,7 @@ function draw(keyCode) {
 
 	window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
 
-	if(ball.state === 0){
-		window.ctx.drawImage(ball.image, (bar.xcoord + bar.w/2), bar.ycoord - ball.h, ball.w, ball.h);
-	}
-
-
+	drawBall();
 
 	//Draw the grid
 	// //First the columns
@@ -144,7 +169,7 @@ function draw(keyCode) {
 
 			//x coordinate of the box
 			var xcoord = (boxGrid.xcoord + boxGrid.colWidth*i);
-			console.log(xcoord);
+
 			//y coordinate of the box
 			var ycoord = (boxGrid.ycoord + boxGrid.rowWidth*j);
 
@@ -152,6 +177,15 @@ function draw(keyCode) {
 		}
 	}
 
+}
+
+function checkBounds(obj){
+	if(obj.xcoord < 0 || obj.xcoord > canvas.width){
+		endGame();
+	}
+	else if(obj.ycoord < 0 || obj.ycoord > canvas.height){
+		endGame();
+	}
 }
 
 //This function is used to check the bounds of various objects when the canvas receives input from the keyboard
@@ -184,9 +218,9 @@ function onKeyDown(event) {
 	else if(event.keyCode === 39){
 		bar.xcoord = bar.xcoord + 5*window.speed;
 	}
-	//Space bar. Testing speed ability
+	//Space bar. Used to begin game.
 	else if(event.keyCode == 32){
-		window.speed = 5;
+		beginGame();
 	}
 
 	draw(event.keyCode);
