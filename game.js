@@ -5,10 +5,14 @@ window.canvas = document.getElementById("myCanvas");
 window.ctx = canvas.getContext("2d");
 //Bar speed multiplier
 window.speed = 1;
+window.stop = false;
+window.lives = 0;
 
 window.onload = function(){
 	setInterval(function(){
-		draw();
+		if(!window.stop){
+			draw();
+		}
 	}, 20);
 };
 
@@ -20,8 +24,8 @@ var boxGrid = function(){
 	exports.buffer = 2;
 
 	//The number of rows and columns
-	exports.rowNums = 3;
-	exports.colNums = 8;
+	exports.rowNums = 2;
+	exports.colNums = 5;
 
 
 	//The coordinates of the grid
@@ -51,7 +55,19 @@ function beginGame(){
 
 function endGame(){
 	ball.state = 0;
-	draw();
+	if(window.lives > 0){
+		window.lives--;
+		draw();
+	}
+	else{
+		window.stop = true;
+		window.ctx.save();
+		window.ctx.fillStyle = '#f00';
+		window.ctx.font = 'italic bold 50px sans-serif';
+		window.ctx.textBaseline = 'bottom';
+		window.ctx.fillText('YOU LOSE!', 100, 350);
+		window.ctx.restore();
+	}
 }
 
 
@@ -106,77 +122,82 @@ var ball = function(){
 
 
 function drawBall(){
-	if(ball.state === 0){
-		ball.xcoord = (bar.xcoord + bar.w/2);
-		ball.ycoord = bar.ycoord - ball.h;
-		window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
-	}
-	else{
-		checkBounds(ball);
-		ball.ycoord = ball.ycoord - 3;
-		window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+	if(!stop){
+		if(ball.state === 0){
+			ball.xcoord = (bar.xcoord + bar.w/2);
+			ball.ycoord = bar.ycoord - ball.h;
+			window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+		}
+		else{
+			checkBounds(ball);
+			ball.ycoord = ball.ycoord - 3;
+			window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+		}
 	}
 }
 
 function draw(keyCode) {
-	//Clears the entire canvas
-	window.ctx.clearRect(0, 0, canvas.width, canvas.height);
-	//Draws the bar
-	//TODO: needs to draw everything on the screen
+	if(!stop){
+		//Clears the entire canvas
+		window.ctx.clearRect(0, 0, canvas.width, canvas.height);
+		//Draws the bar
+		//TODO: needs to draw everything on the screen
 
-	checkBoundsOnInput(bar, canvas, keyCode);
+		checkBoundsOnInput(bar, canvas, keyCode);
 
-	window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
+		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
 
-	drawBall();
+		drawBall();
 
-	//Draw the grid
-	// //First the columns
-	// var currX = boxGrid.xcoord;
-	// var currY = boxGrid.ycoord;
-	// for(var i = 0; i <= boxGrid.colNums; i++){
-	// 	window.ctx.beginPath();
-	// 	window.ctx.moveTo(currX, currY);
-	// 	console.log(currX);
-	// 	ctx.lineTo(currX, boxGrid.h + currY);
-	// 	ctx.closePath();
-	//     ctx.stroke();
-	// 	currX = currX + boxGrid.colWidth;
-	// }
+		window.ctx.fillText("Lives left: " + window.lives, 10, 10);
 
-	// //Now the rows
-	// var currX = boxGrid.xcoord;
-	// for(var i = 0; i <= boxGrid.rowNums; i++){
-	// 	window.ctx.beginPath();
-	// 	window.ctx.moveTo(currX, currY);
-	// 	ctx.lineTo(boxGrid.w + currX, currY);
-	// 	ctx.closePath();
-	//     ctx.stroke();
-	// 	currY = currY + boxGrid.rowWidth;
-	// }
+		//Draw the grid
+		// //First the columns
+		// var currX = boxGrid.xcoord;
+		// var currY = boxGrid.ycoord;
+		// for(var i = 0; i <= boxGrid.colNums; i++){
+		// 	window.ctx.beginPath();
+		// 	window.ctx.moveTo(currX, currY);
+		// 	console.log(currX);
+		// 	ctx.lineTo(currX, boxGrid.h + currY);
+		// 	ctx.closePath();
+		//     ctx.stroke();
+		// 	currX = currX + boxGrid.colWidth;
+		// }
 
-	//Iterate through the grid and draw boxes in each slot
-	for(i = 0; i < boxGrid.colNums; i++){
-		for(j = 0; j < boxGrid.rowNums; j++){
+		// //Now the rows
+		// var currX = boxGrid.xcoord;
+		// for(var i = 0; i <= boxGrid.rowNums; i++){
+		// 	window.ctx.beginPath();
+		// 	window.ctx.moveTo(currX, currY);
+		// 	ctx.lineTo(boxGrid.w + currX, currY);
+		// 	ctx.closePath();
+		//     ctx.stroke();
+		// 	currY = currY + boxGrid.rowWidth;
+		// }
 
-			//width of the box
-			var w = boxGrid.colWidth;
+		//Iterate through the grid and draw boxes in each slot
+		for(i = 0; i < boxGrid.colNums; i++){
+			for(j = 0; j < boxGrid.rowNums; j++){
 
-			//Height of the box
-			var h = boxGrid.rowWidth;
+				//width of the box
+				var w = boxGrid.colWidth;
+
+				//Height of the box
+				var h = boxGrid.rowWidth;
 
 
 
-			//x coordinate of the box
-			var xcoord = (boxGrid.xcoord + boxGrid.colWidth*i);
+				//x coordinate of the box
+				var xcoord = (boxGrid.xcoord + boxGrid.colWidth*i);
 
-			//y coordinate of the box
-			var ycoord = (boxGrid.ycoord + boxGrid.rowWidth*j);
+				//y coordinate of the box
+				var ycoord = (boxGrid.ycoord + boxGrid.rowWidth*j);
 
-			window.ctx.drawImage(box.image, xcoord, ycoord, w - boxGrid.buffer, h - boxGrid.buffer);
+				window.ctx.drawImage(box.image, xcoord, ycoord, w - boxGrid.buffer, h - boxGrid.buffer);
+			}
 		}
 	}
-
 }
 
 function checkBounds(obj){
