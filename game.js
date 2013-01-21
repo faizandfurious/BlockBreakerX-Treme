@@ -6,6 +6,11 @@ window.ctx = canvas.getContext("2d");
 //Bar speed multiplier
 window.speed = 1;
 
+window.onload = function(){
+	setInterval(function(){
+		draw();
+	}, 20);
+};
 
 //Creating the grid to place boxes into.
 var boxGrid = function(){
@@ -47,7 +52,7 @@ var bar = function(){
 	exports.xcoord = 300;
 	exports.ycoord = 530;
 	exports.w = 80;
-	exports.h = 30;
+	exports.h = 10;
 	exports.image.src = "assets/bar.png";
 
 	return exports;
@@ -73,8 +78,8 @@ var ball = function(){
 
 	exports.xcoord = 5;
 	exports.ycoord = 5;
-	exports.w = 5;
-	exports.h = 5;
+	exports.w = 20;
+	exports.h = 20;
 
 	exports.image = new Image();
 	exports.image.src = "assets/ball.png";
@@ -92,8 +97,10 @@ function draw(keyCode) {
 
 	checkBoundsOnInput(bar, canvas, keyCode);
 
+	window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
+
 	if(ball.state === 0){
-		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
+		window.ctx.drawImage(ball.image, (bar.xcoord + bar.w/2), bar.ycoord - ball.h, ball.w, ball.h);
 	}
 
 
@@ -165,8 +172,6 @@ function checkBoundsOnInput(obj, canvas, keyCode){
 		}
 	}
 }
-
-
 
 //Event Listeners
 
