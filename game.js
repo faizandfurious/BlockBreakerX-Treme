@@ -15,8 +15,8 @@ var boxGrid = function(){
 	exports.buffer = 2;
 
 	//The number of rows and columns
-	exports.rowNums = 4;
-	exports.colNums = 10;
+	exports.rowNums = 3;
+	exports.colNums = 8;
 
 
 	//The coordinates of the grid
@@ -28,6 +28,7 @@ var boxGrid = function(){
 	//TODO Remove fixed number, find appropriate ratio
 	exports.h = window.canvas.height*.6 - exports.ycoord*2;
 
+	//The width and height of each slot
 	exports.colWidth = exports.w/exports.colNums;
 	exports.rowWidth = exports.h/exports.rowNums;
 
@@ -70,6 +71,14 @@ var ball = function(){
 	//Not moving, 1 means moving
 	exports.state = 0;
 
+	exports.xcoord = 5;
+	exports.ycoord = 5;
+	exports.w = 5;
+	exports.h = 5;
+
+	exports.image = new Image();
+	exports.image.src = "assets/ball.png";
+
 
 	return exports;
 }();
@@ -82,34 +91,37 @@ function draw(keyCode) {
 	//TODO: needs to draw everything on the screen
 
 	checkBounds(bar, canvas, keyCode);
-	window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
+
+	if(ball.state === 0){
+		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
+	}
 
 
 
 	//Draw the grid
-	//First the columns
-	var currX = boxGrid.xcoord;
-	var currY = boxGrid.ycoord;
-	for(var i = 0; i <= boxGrid.colNums; i++){
-		window.ctx.beginPath();
-		window.ctx.moveTo(currX, currY);
-		console.log(currX);
-		ctx.lineTo(currX, boxGrid.h + currY);
-		ctx.closePath();
-	    ctx.stroke();
-		currX = currX + boxGrid.colWidth;
-	}
+	// //First the columns
+	// var currX = boxGrid.xcoord;
+	// var currY = boxGrid.ycoord;
+	// for(var i = 0; i <= boxGrid.colNums; i++){
+	// 	window.ctx.beginPath();
+	// 	window.ctx.moveTo(currX, currY);
+	// 	console.log(currX);
+	// 	ctx.lineTo(currX, boxGrid.h + currY);
+	// 	ctx.closePath();
+	//     ctx.stroke();
+	// 	currX = currX + boxGrid.colWidth;
+	// }
 
-	//Now the rows
-	var currX = boxGrid.xcoord;
-	for(var i = 0; i <= boxGrid.rowNums; i++){
-		window.ctx.beginPath();
-		window.ctx.moveTo(currX, currY);
-		ctx.lineTo(boxGrid.w + currX, currY);
-		ctx.closePath();
-	    ctx.stroke();
-		currY = currY + boxGrid.rowWidth;
-	}
+	// //Now the rows
+	// var currX = boxGrid.xcoord;
+	// for(var i = 0; i <= boxGrid.rowNums; i++){
+	// 	window.ctx.beginPath();
+	// 	window.ctx.moveTo(currX, currY);
+	// 	ctx.lineTo(boxGrid.w + currX, currY);
+	// 	ctx.closePath();
+	//     ctx.stroke();
+	// 	currY = currY + boxGrid.rowWidth;
+	// }
 
 	//Iterate through the grid and draw boxes in each slot
 	for(i = 0; i < boxGrid.colNums; i++){
@@ -117,7 +129,7 @@ function draw(keyCode) {
 
 			//width of the box
 			var w = boxGrid.colWidth;
-			console.log(w + " is the width of the box");
+
 			//Height of the box
 			var h = boxGrid.rowWidth;
 
@@ -129,8 +141,7 @@ function draw(keyCode) {
 			//y coordinate of the box
 			var ycoord = (boxGrid.ycoord + boxGrid.rowWidth*j);
 
-			console.log(h + " is the height of the box");
-			window.ctx.drawImage(box.image, xcoord, ycoord, w, h);
+			window.ctx.drawImage(box.image, xcoord, ycoord, w - boxGrid.buffer, h - boxGrid.buffer);
 		}
 	}
 
@@ -184,10 +195,7 @@ canvas.focus();
 
 
 function onMouseDown(event) {
-    // var x = event.pageX - canvas.offsetLeft;  // do not use event.x, it's not cross-browser!!!
-    // var y = event.pageY - canvas.offsetTop;
-    // ctx.fillStyle = "rgba(0,128,128,0.5)";
-    // ctx.fillRect(x-25, y-25, 50, 50);
+
 }
 canvas.addEventListener('mousedown', onMouseDown, false);
 
