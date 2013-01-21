@@ -13,6 +13,8 @@ window.onload = function(){
 		if(!window.stop){
 			draw();
 		}
+        moveBar();
+		draw();
 	}, 20);
 };
 
@@ -142,8 +144,10 @@ function draw(keyCode) {
 		window.ctx.clearRect(0, 0, canvas.width, canvas.height);
 		//Draws the bar
 		//TODO: needs to draw everything on the screen
-
-		checkBoundsOnInput(bar, canvas, keyCode);
+	    if(keyCode !== undefined)
+	    {
+		    checkBoundsOnInput(bar, canvas, keyCode);
+	    }
 
 		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
 
@@ -185,7 +189,6 @@ function draw(keyCode) {
 
 				//Height of the box
 				var h = boxGrid.rowWidth;
-
 
 
 				//x coordinate of the box
@@ -230,14 +233,33 @@ function checkBoundsOnInput(obj, canvas, keyCode){
 
 //Event Listeners
 
-function onKeyDown(event) {
-	//Left arrow key
+var direction = "stop";
+var keys = 0;
+
+function onKeyUp(event) {
+    //Left arrow key
 	if(event.keyCode === 37){
-    	bar.xcoord = bar.xcoord - 5*window.speed;
+    	direction = "stop";
+        
 	}
 	//Right arrow key
 	else if(event.keyCode === 39){
-		bar.xcoord = bar.xcoord + 5*window.speed;
+    	direction = "stop";
+	}
+
+	draw(event.keyCode);
+}
+
+function onKeyDown(event) {
+    //Left arrow key
+	if(event.keyCode === 37){
+        if(direction === "stop")
+            direction = "left";
+	}
+	//Right arrow key
+	else if(event.keyCode === 39){
+        if(direction ==="stop")
+            direction = "right";
 	}
 	//Space bar. Used to begin game.
 	else if(event.keyCode == 32){
@@ -248,6 +270,31 @@ function onKeyDown(event) {
 }
 
 canvas.addEventListener('keydown', onKeyDown, false);
+canvas.addEventListener('keyup', onKeyUp, false);
+
+/**
+* New Event listener function that listens for keydown manually on given time interval
+* for a smoother bar motion
+*/
+
+function moveBar()
+{
+    switch(direction) {
+        case "left":
+    	    bar.xcoord = bar.xcoord - 5*window.speed;
+            break;
+        case "right":
+    	    bar.xcoord = bar.xcoord + 5*window.speed;
+            break;
+        default:
+            break;
+    }
+    
+
+}
+
+
+
 
 // make canvas focusable, then give it focus!
 canvas.setAttribute('tabindex','0');
