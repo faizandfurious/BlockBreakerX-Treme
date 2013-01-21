@@ -89,8 +89,10 @@ function draw(keyCode) {
 
 	//Draws the bar
 	//TODO: needs to draw everything on the screen
-
-	checkBoundsOnInput(bar, canvas, keyCode);
+    if(keyCode !== undefined)
+    {
+	    checkBoundsOnInput(bar, canvas, keyCode);
+    }
 
 	if(ball.state === 0){
 		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
@@ -137,7 +139,6 @@ function draw(keyCode) {
 
 			//x coordinate of the box
 			var xcoord = (boxGrid.xcoord + boxGrid.colWidth*i);
-			console.log(xcoord);
 			//y coordinate of the box
 			var ycoord = (boxGrid.ycoord + boxGrid.rowWidth*j);
 
@@ -170,14 +171,33 @@ function checkBoundsOnInput(obj, canvas, keyCode){
 
 //Event Listeners
 
-function onKeyDown(event) {
-	//Left arrow key
+var direction = "stop";
+var keys = 0;
+
+function onKeyUp(event) {
+    //Left arrow key
 	if(event.keyCode === 37){
-    	bar.xcoord = bar.xcoord - 5*window.speed;
+    	direction = "stop";
+        
 	}
 	//Right arrow key
 	else if(event.keyCode === 39){
-		bar.xcoord = bar.xcoord + 5*window.speed;
+    	direction = "stop";
+	}
+
+	draw(event.keyCode);
+}
+
+function onKeyDown(event) {
+    //Left arrow key
+	if(event.keyCode === 37){
+        if(direction === "stop")
+            direction = "left";
+	}
+	//Right arrow key
+	else if(event.keyCode === 39){
+        if(direction ==="stop")
+            direction = "right";
 	}
 	//Space bar. Testing speed ability
 	else if(event.keyCode == 32){
@@ -188,6 +208,39 @@ function onKeyDown(event) {
 }
 
 canvas.addEventListener('keydown', onKeyDown, false);
+canvas.addEventListener('keyup', onKeyUp, false);
+
+/**
+* New Event listener function that listens for keydown manually on given time interval
+* for a smoother bar motion
+*/
+
+function moveBar()
+{
+    if(direction === "stop")
+    {
+        draw();
+        return;
+    }
+    if(direction === "left")
+    {
+    	bar.xcoord = bar.xcoord - 5*window.speed;
+    draw();
+        return;
+    }
+    if(direction === "right")
+    {
+    	bar.xcoord = bar.xcoord + 5*window.speed;
+    draw();
+        return;
+    }
+	
+
+}
+
+setInterval(moveBar, 20);
+
+
 
 // make canvas focusable, then give it focus!
 canvas.setAttribute('tabindex','0');
