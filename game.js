@@ -14,8 +14,8 @@ var boxGrid = function(){
 	//Leave space between each block
 	exports.buffer = 2;
 
-	//
-	exports.rowNums = 6;
+	//The number of rows and columns
+	exports.rowNums = 4;
 	exports.colNums = 10;
 
 
@@ -25,7 +25,8 @@ var boxGrid = function(){
 
 	//The width and height of the grid
 	exports.w = window.canvas.width - exports.xcoord*2;
-	exports.h = window.canvas.height - exports.ycoord*2;
+	//TODO Remove fixed number, find appropriate ratio
+	exports.h = window.canvas.height*.6 - exports.ycoord*2;
 
 	exports.colWidth = exports.w/exports.colNums;
 	exports.rowWidth = exports.h/exports.rowNums;
@@ -56,11 +57,6 @@ var bar = function(){
 var box = function(){
 	var exports = {};
 
-	exports.xcoord = 30;
-	exports.xcoord = 30;
-
-	exports.w = 40;
-	exports.h = 40;
 	exports.image = new Image();
 	exports.image.src = "assets/box.png";
 
@@ -70,6 +66,9 @@ var box = function(){
 //The ball object
 var ball = function(){
 	var exports = {};
+
+	//Not moving, 1 means moving
+	exports.state = 0;
 
 
 	return exports;
@@ -112,10 +111,34 @@ function draw(keyCode) {
 		currY = currY + boxGrid.rowWidth;
 	}
 
+	//Iterate through the grid and draw boxes in each slot
+	for(i = 0; i < boxGrid.colNums; i++){
+		for(j = 0; j < boxGrid.rowNums; j++){
+
+			//width of the box
+			var w = boxGrid.colWidth;
+			console.log(w + " is the width of the box");
+			//Height of the box
+			var h = boxGrid.rowWidth;
+
+
+
+			//x coordinate of the box
+			var xcoord = (boxGrid.xcoord + boxGrid.colWidth*i);
+			console.log(xcoord);
+			//y coordinate of the box
+			var ycoord = (boxGrid.ycoord + boxGrid.rowWidth*j);
+
+			console.log(h + " is the height of the box");
+			window.ctx.drawImage(box.image, xcoord, ycoord, w, h);
+		}
+	}
+
 }
 
 //This function is used to check the bounds of various objects
 function checkBounds(obj, canvas, keyCode){
+	//Left arrow key
 	if(keyCode === 37){
 		//Checks to see if the current move would place the bar offscreen
 		if(obj.xcoord - 5 * window.speed < 0){
@@ -123,6 +146,7 @@ function checkBounds(obj, canvas, keyCode){
 		}
 	}
 
+	//Right arrow key
 	else if(keyCode === 39){
 		//Checks to see if the current move would place the bar offscreen
 		if(obj.xcoord + obj.w + 5*window.speed > canvas.width){
@@ -136,12 +160,15 @@ function checkBounds(obj, canvas, keyCode){
 //Event Listeners
 
 function onKeyDown(event) {
+	//Left arrow key
 	if(event.keyCode === 37){
     	bar.xcoord = bar.xcoord - 5*window.speed;
 	}
+	//Right arrow key
 	else if(event.keyCode === 39){
 		bar.xcoord = bar.xcoord + 5*window.speed;
 	}
+	//Space bar. Testing speed ability
 	else if(event.keyCode == 32){
 		window.speed = 5;
 	}
@@ -163,3 +190,9 @@ function onMouseDown(event) {
     // ctx.fillRect(x-25, y-25, 50, 50);
 }
 canvas.addEventListener('mousedown', onMouseDown, false);
+
+
+
+
+
+
