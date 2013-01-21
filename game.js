@@ -6,7 +6,7 @@ window.ctx = canvas.getContext("2d");
 //Bar speed multiplier
 window.speed = 1;
 window.stop = false;
-window.lives = 0;
+window.lives = 5;
 
 window.onload = function(){
 	setInterval(function(){
