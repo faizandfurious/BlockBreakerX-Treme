@@ -8,7 +8,7 @@ window.speed = 1;
 
 window.onload = function(){
 	setInterval(function(){
-        move();
+        moveBar();
 		draw();
 	}, 20);
 };
@@ -211,34 +211,30 @@ function checkBoundsOnInput(obj, canvas, keyCode){
 
 //Event Listeners
 
-var direction = "stop";
-var keys = 0;
+var vMax = 10;
+var vMin = -10;
+var velocity = 0;
+var acceleration = 0;
 
 function onKeyUp(event) {
     //Left arrow key
-	if(event.keyCode === 37){
-    	direction = "stop";
-        
+	if(event.keyCode === 37 || event.keyCode === 39){
+       if(acceleration < 0)
+           acceleration = 0; 
 	}
-	//Right arrow key
-	else if(event.keyCode === 39){
-    	direction = "stop";
-	}
-
+	
 	draw(event.keyCode);
 }
 
 function onKeyDown(event) {
     //Left arrow key
 	if(event.keyCode === 37){
-        if(direction === "stop")
-            direction = "left";
+         acceleration = -.5;
 	}
 	//Right arrow key
 	else if(event.keyCode === 39){
-        if(direction ==="stop")
-            direction = "right";
-	}
+        acceleration = .5;
+    }
 	//Space bar. Used to begin game.
 	else if(event.keyCode == 32){
 		beginGame();
@@ -257,17 +253,10 @@ canvas.addEventListener('keyup', onKeyUp, false);
 
 function moveBar()
 {
-    switch(direction) {
-        case "left":
-    	    bar.xcoord = bar.xcoord - 5*window.speed;
-            break;
-        case "right":
-    	    bar.xcoord = bar.xcoord + 5*window.speed;
-            break;
-        default:
-            break;
-    }
-    
+    var vnew = velocity + acceleration;
+    if(vnew <= vMax && vnew >= vMin)
+        velocity = vnew;
+    bar.xcoord = bar.xcoord + velocity;
 
 }
 
