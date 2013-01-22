@@ -225,11 +225,11 @@ function onKeyUp(event) {
 function onKeyDown(event) {
     //Left arrow key
 	if(event.keyCode === 37){
-         acceleration = -.5;
+         acceleration = -2;
 	}
 	//Right arrow key
 	else if(event.keyCode === 39){
-        acceleration = .5;
+        acceleration = 2;
     }
 	//Space bar. Used to begin game.
 	else if(event.keyCode == 32){
@@ -252,7 +252,18 @@ function moveBar()
     var vnew = velocity + acceleration;
     if(vnew <= vMax && vnew >= vMin)
         velocity = vnew;
-    bar.xcoord = bar.xcoord + velocity;
+    var xNew = bar.xcoord + velocity;
+    if(xNew < 0){
+        xNew = 0;
+        velocity = 0;
+        acceleration = 0;
+    }
+    else if(xNew+bar.w > canvas.width){
+        xNew = canvas.width - bar.w;
+        velocity = 0;
+        acceleration = 0;
+    }
+    bar.xcoord = xNew;
 
 
 }
