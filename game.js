@@ -51,6 +51,7 @@ var boxGrid = function(){
 
 }();
 
+//This function is called at the start of the game. It sets up the box grid with the appropriate boxes.
 function setUpGame(){
 	//Iterate through the grid and draw boxes in each slot
 	for(i = 0; i < boxGrid.colNums; i++){
@@ -73,6 +74,7 @@ function setUpGame(){
 			window.ctx.drawImage(box.image, xcoord, ycoord, w - boxGrid.buffer, h - boxGrid.buffer);
 			boxArray.push(box);
 
+			//DEBUGGING PURPOSES
 			window.ctx.save();
 			window.ctx.fillStyle = '#f00';
 			window.ctx.font = 'italic bold 10px sans-serif';
