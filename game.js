@@ -281,10 +281,25 @@ function moveBar()
 {
     switch(direction) {
         case "left":
-    	    bar.xcoord = bar.xcoord - 5*window.speed;
+		//Checks to see if the current move would place the bar offscreen
+			if(bar.xcoord - 5 * window.speed < 0){
+				bar.xcoord = 0;
+			}
+			//Otherwise move bar accordingly
+			else{
+	    	    bar.xcoord = bar.xcoord - 5*window.speed;
+			}
             break;
         case "right":
-    	    bar.xcoord = bar.xcoord + 5*window.speed;
+            //Checks to see if the current move would place the bar offscreen
+			if(bar.xcoord + bar.w + 5*window.speed > canvas.width){
+				bar.xcoord = canvas.width - bar.w;
+			}
+			//Otherwise move the bar accordingly
+			else{
+	    	    bar.xcoord = bar.xcoord + 5*window.speed;
+
+			}
             break;
         default:
             break;
