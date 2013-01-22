@@ -13,7 +13,7 @@ window.onload = function(){
 		if(!window.stop){
         moveBar();
 		draw();
-	}, 20);
+	} } , 20);
 };
 
 //Creating the grid to place boxes into.
@@ -140,13 +140,8 @@ function draw(keyCode) {
 	if(!stop){
 		//Clears the entire canvas
 		window.ctx.clearRect(0, 0, canvas.width, canvas.height);
+		
 		//Draws the bar
-		//TODO: needs to draw everything on the screen
-	    if(keyCode !== undefined)
-	    {
-		    checkBoundsOnInput(bar, canvas, keyCode);
-	    }
-
 		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
 
 		drawBall();
@@ -210,25 +205,6 @@ function checkBounds(obj){
 	}
 }
 
-//This function is used to check the bounds of various objects when the canvas receives input from the keyboard
-function checkBoundsOnInput(obj, canvas, keyCode){
-	//Left arrow key
-	if(keyCode === 37){
-		//Checks to see if the current move would place the bar offscreen
-		if(obj.xcoord - 5 * window.speed < 0){
-			obj.xcoord = 0;
-		}
-	}
-
-	//Right arrow key
-	else if(keyCode === 39){
-		//Checks to see if the current move would place the bar offscreen
-		if(obj.xcoord + obj.w + 5*window.speed > canvas.width){
-			obj.xcoord = canvas.width - obj.w;
-		}
-	}
-}
-
 //Event Listeners
 
 var vMax = 10;
@@ -277,6 +253,7 @@ function moveBar()
     if(vnew <= vMax && vnew >= vMin)
         velocity = vnew;
     bar.xcoord = bar.xcoord + velocity;
+
 
 }
 
