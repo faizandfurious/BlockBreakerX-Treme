@@ -207,29 +207,32 @@ function checkBounds(obj){
 
 //Event Listeners
 
-var vMax = 10;
-var vMin = -10;
+var vMax = 14;
+var vMin = -14;
 var velocity = 0;
 var acceleration = 0;
+var state = 0;
 
 function onKeyUp(event) {
-    //Left arrow key
-	if(event.keyCode === 37 || event.keyCode === 39){
-       if(acceleration < 0)
-           acceleration = 0; 
-	}
-	
+    if(event.keyCode === 37 || event.keyCode === 39){
+        acceleration = 0; 
+    }
+    state = 0;
 	draw(event.keyCode);
 }
 
 function onKeyDown(event) {
+
+    
     //Left arrow key
 	if(event.keyCode === 37){
          acceleration = -2;
+        state = 1;
 	}
 	//Right arrow key
-	else if(event.keyCode === 39){
+	if(event.keyCode === 39){
         acceleration = 2;
+        state = 1;
     }
 	//Space bar. Used to begin game.
 	else if(event.keyCode == 32){
@@ -249,9 +252,17 @@ canvas.addEventListener('keyup', onKeyUp, false);
 
 function moveBar()
 {
+    var friction = 0;
     var vnew = velocity + acceleration;
     if(vnew <= vMax && vnew >= vMin)
         velocity = vnew;
+    if(acceleration === 0){
+        if(velocity > 0)
+            friction = -.5;
+        else if(velocity < 0)
+            friction = .5;
+    }
+    velocity+=friction;
     var xNew = bar.xcoord + velocity;
     if(xNew < 0){
         xNew = 0;
