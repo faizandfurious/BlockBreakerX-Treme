@@ -20,7 +20,7 @@ window.onload = function(){
 var boxGrid = function(){
 	var exports = {};
 
-	//Leave space between each block
+	//Leave space between each bbar.dLock
 	exports.buffer = 2;
 
 	//The number of rows and columns
@@ -50,6 +50,8 @@ var boxGrid = function(){
 function beginGame(){
 	if(ball.state === 0){
 		ball.state = 1;
+        ball.xVelocity = bar.velocity/2;
+        ball.yVelocity = -1;
 	}
 }
 
@@ -76,11 +78,17 @@ function endGame(){
 var bar = function(){
 	var exports = {};
 
-	exports.image = new Image();
+    exports.vMax = 14;
+    exports.vMin = -14;
+    exports.velocity = 0;
+    exports.acceleration = 0;
+    exports.dLock = 0;
+	
+    exports.image = new Image();
 	exports.xcoord = 300;
 	exports.ycoord = 530;
-	exports.w = 80;
-	exports.h = 10;
+	exports.w = 120;
+	exports.h = 15;
 	exports.image.src = "assets/bar.png";
 
 	return exports;
@@ -104,9 +112,9 @@ var ball = function(){
 	//Not moving, 1 means moving
 	exports.state = 0;
 
-	//The degree angle of the ball's trajectory
-	exports.direction = 90;
-	exports.speed = 1;
+	//Express Ball's trajectory and motion as vertical and horizontal velocities
+    exports.xVelocity = 0;
+    exports.yVelocity = 0;
 
 	exports.xcoord = 5;
 	exports.ycoord = 5;
@@ -130,7 +138,8 @@ function drawBall(){
 		}
 		else{
 			checkBounds(ball);
-			ball.ycoord = ball.ycoord - 3;
+			ball.ycoord = ball.ycoord + ball.yVelocity;
+            ball.xcoord = ball.xcoord + ball.xVelocity;
 			window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
 		}
 	}
@@ -207,17 +216,22 @@ function checkBounds(obj){
 
 //Event Listeners
 
-var vMax = 14;
-var vMin = -14;
-var velocity = 0;
-var acceleration = 0;
-var state = 0;
 
 function onKeyUp(event) {
-    if(event.keyCode === 37 || event.keyCode === 39){
-        acceleration = 0; 
+
+    if(event.keyCode === 37){
+        if(bar.dLock === -1){
+            bar.acceleration = 0; 
+            bar.dLock = 0;
+        }
     }
-    state = 0;
+    if(event.keyCode === 39){
+        if(bar.dLock === 1){
+            bar.acceleration = 0;
+            bar.dLock = 0;
+        }
+    }
+
 	draw(event.keyCode);
 }
 
@@ -226,13 +240,17 @@ function onKeyDown(event) {
     
     //Left arrow key
 	if(event.keyCode === 37){
-         acceleration = -2;
-        state = 1;
+        if(bar.dLock > -1){
+            bar.acceleration = -2;
+            bar.dLock = -1;
+        }
 	}
 	//Right arrow key
 	if(event.keyCode === 39){
-        acceleration = 2;
-        state = 1;
+        if(bar.dLock < 1){
+            bar.acceleration = 2;
+            bar.dLock = 1;
+        }
     }
 	//Space bar. Used to begin game.
 	else if(event.keyCode == 32){
@@ -253,26 +271,31 @@ canvas.addEventListener('keyup', onKeyUp, false);
 function moveBar()
 {
     var friction = 0;
-    var vnew = velocity + acceleration;
-    if(vnew <= vMax && vnew >= vMin)
-        velocity = vnew;
-    if(acceleration === 0){
-        if(velocity > 0)
+    var vnew = bar.velocity + bar.acceleration;
+    if(vnew <= bar.vMax && vnew >= bar.vMin)
+        bar.velocity = vnew;
+
+    if(bar.acceleration === 0){
+        if(bar.velocity > 0)
             friction = -.5;
-        else if(velocity < 0)
+        else if(bar.velocity < 0)
             friction = .5;
     }
-    velocity+=friction;
-    var xNew = bar.xcoord + velocity;
+
+    bar.velocity+=friction;
+    
+    var xNew = bar.xcoord + bar.velocity;
     if(xNew < 0){
         xNew = 0;
-        velocity = 0;
-        acceleration = 0;
+        bar.dLock = 0;
+        bar.velocity = 0;
+        bar.acceleration = 0;
     }
     else if(xNew+bar.w > canvas.width){
         xNew = canvas.width - bar.w;
-        velocity = 0;
-        acceleration = 0;
+        bar.dLock = 0;
+        bar.velocity = 0;
+        bar.acceleration = 0;
     }
     bar.xcoord = xNew;
 
