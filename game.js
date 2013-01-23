@@ -51,7 +51,7 @@ function beginGame(){
 	if(ball.state === 0){
 		ball.state = 1;
         ball.xVelocity = bar.velocity/2;
-        ball.yVelocity = -1;
+        ball.yVelocity = -3;
 	}
 }
 
@@ -116,8 +116,8 @@ var ball = function(){
     exports.xVelocity = 0;
     exports.yVelocity = 0;
 
-	exports.xcoord = 5;
-	exports.ycoord = 5;
+	exports.x = 5;
+	exports.y = 5;
 	exports.w = 20;
 	exports.h = 20;
 
@@ -132,15 +132,15 @@ var ball = function(){
 function drawBall(){
 	if(!stop){
 		if(ball.state === 0){
-			ball.xcoord = (bar.xcoord + bar.w/2);
-			ball.ycoord = bar.ycoord - ball.h;
-			window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+			ball.x = (bar.xcoord + bar.w/2);
+			ball.y = bar.ycoord - ball.h;
+			window.ctx.drawImage(ball.image, ball.x, ball.y, ball.w, ball.h);
 		}
 		else{
-			checkBounds(ball);
-			ball.ycoord = ball.ycoord + ball.yVelocity;
-            ball.xcoord = ball.xcoord + ball.xVelocity;
-			window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+			checkBounds();
+			ball.y = ball.y + ball.yVelocity;
+            ball.x = ball.x + ball.xVelocity;
+			window.ctx.drawImage(ball.image, ball.x, ball.y, ball.w, ball.h);
 		}
 	}
 }
@@ -205,13 +205,14 @@ function draw(keyCode) {
 	}
 }
 
-function checkBounds(obj){
-	if(obj.xcoord < 0 || obj.xcoord > canvas.width){
-		endGame();
-	}
-	else if(obj.ycoord < 0 || obj.ycoord > canvas.height){
-		endGame();
-	}
+function checkBounds(){
+    if(ball.y+ball.h > canvas.height)
+        endGame();
+    if(ball.y < 0)
+        ball.yVelocity = -1 * ball.yVelocity;
+    if(ball.x < 0 || ball.x+ball.h > canvas.width)
+        ball.xVelocity = -1 * ball.xVelocity;
+
 }
 
 //Event Listeners
