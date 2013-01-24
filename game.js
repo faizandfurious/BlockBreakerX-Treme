@@ -14,18 +14,16 @@ window.onload = function(){
 	setUpGame();
 	setInterval(function(){
 		if(!window.stop){
-			draw();
-		}
         moveBar();
 		draw();
-	}, 20);
+	} } , 20);
 };
 
 //Creating the grid to place boxes into.
 var boxGrid = function(){
 	var exports = {};
 
-	//Leave space between each block
+	//Leave space between each bbar.dLock
 	exports.buffer = 2;
 
 	//The number of rows and columns
@@ -91,6 +89,8 @@ function setUpGame(){
 function beginGame(){
 	if(ball.state === 0){
 		ball.state = 1;
+        ball.xVelocity = bar.velocity/2;
+        ball.yVelocity = -3;
 	}
 }
 
@@ -117,11 +117,17 @@ function endGame(){
 var bar = function(){
 	var exports = {};
 
-	exports.image = new Image();
+    exports.vMax = 14;
+    exports.vMin = -14;
+    exports.velocity = 0;
+    exports.acceleration = 0;
+    exports.dLock = 0;
+	
+    exports.image = new Image();
 	exports.xcoord = 300;
 	exports.ycoord = 530;
-	exports.w = 80;
-	exports.h = 10;
+	exports.w = 120;
+	exports.h = 15;
 	exports.image.src = "assets/bar.png";
 
 	return exports;
@@ -146,12 +152,12 @@ var ball = function(){
 	//Not moving, 1 means moving
 	exports.state = 0;
 
-	//The degree angle of the ball's trajectory
-	exports.direction = 90;
-	exports.speed = 1;
+	//Express Ball's trajectory and motion as vertical and horizontal velocities
+    exports.xVelocity = 0;
+    exports.yVelocity = 0;
 
-	exports.xcoord = 5;
-	exports.ycoord = 5;
+	exports.x = 5;
+	exports.y = 5;
 	exports.w = 20;
 	exports.h = 20;
 
@@ -166,14 +172,15 @@ var ball = function(){
 function drawBall(){
 	if(!stop){
 		if(ball.state === 0){
-			ball.xcoord = (bar.xcoord + bar.w/2);
-			ball.ycoord = bar.ycoord - ball.h;
-			window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+			ball.x = (bar.xcoord + bar.w/2);
+			ball.y = bar.ycoord - ball.h;
+			window.ctx.drawImage(ball.image, ball.x, ball.y, ball.w, ball.h);
 		}
 		else{
-			checkBounds(ball);
-			ball.ycoord = ball.ycoord - 3;
-			window.ctx.drawImage(ball.image, ball.xcoord, ball.ycoord, ball.w, ball.h);
+			checkBounds();
+			ball.y = ball.y + ball.yVelocity;
+            ball.x = ball.x + ball.xVelocity;
+			window.ctx.drawImage(ball.image, ball.x, ball.y, ball.w, ball.h);
 		}
 	}
 }
@@ -197,45 +204,54 @@ function draw(keyCode) {
 	}
 }
 
-function checkBounds(obj){
-	if(obj.xcoord < 0 || obj.xcoord > canvas.width){
-		endGame();
-	}
-	else if(obj.ycoord < 0 || obj.ycoord > canvas.height){
-		endGame();
-	}
+function checkBounds(){
+    if(ball.y+ball.h > canvas.height)
+        endGame();
+    if(ball.y < 0)
+        ball.yVelocity = -1 * ball.yVelocity;
+    if(ball.x < 0 || ball.x+ball.h > canvas.width)
+        ball.xVelocity = -1 * ball.xVelocity;
+
 }
 
 //Event Listeners
 
-var direction = "stop";
-var keys = 0;
 
 function onKeyUp(event) {
-    //Left arrow key
-	if(event.keyCode === 37){
-    	direction = "stop";
-        
-	}
-	//Right arrow key
-	else if(event.keyCode === 39){
-    	direction = "stop";
-	}
+
+    if(event.keyCode === 37){
+        if(bar.dLock === -1){
+            bar.acceleration = 0; 
+            bar.dLock = 0;
+        }
+    }
+    if(event.keyCode === 39){
+        if(bar.dLock === 1){
+            bar.acceleration = 0;
+            bar.dLock = 0;
+        }
+    }
 
 	draw(event.keyCode);
 }
 
 function onKeyDown(event) {
+
+    
     //Left arrow key
 	if(event.keyCode === 37){
-        if(direction === "stop")
-            direction = "left";
+        if(bar.dLock > -1){
+            bar.acceleration = -2;
+            bar.dLock = -1;
+        }
 	}
 	//Right arrow key
-	else if(event.keyCode === 39){
-        if(direction ==="stop")
-            direction = "right";
-	}
+	if(event.keyCode === 39){
+        if(bar.dLock < 1){
+            bar.acceleration = 2;
+            bar.dLock = 1;
+        }
+    }
 	//Space bar. Used to begin game.
 	else if(event.keyCode == 32){
 		beginGame();
@@ -254,32 +270,35 @@ canvas.addEventListener('keyup', onKeyUp, false);
 
 function moveBar()
 {
-    switch(direction) {
-        case "left":
-		//Checks to see if the current move would place the bar offscreen
-			if(bar.xcoord - 5 * window.speed < 0){
-				bar.xcoord = 0;
-			}
-			//Otherwise move bar accordingly
-			else{
-	    	    bar.xcoord = bar.xcoord - 5*window.speed;
-			}
-            break;
-        case "right":
-            //Checks to see if the current move would place the bar offscreen
-			if(bar.xcoord + bar.w + 5*window.speed > canvas.width){
-				bar.xcoord = canvas.width - bar.w;
-			}
-			//Otherwise move the bar accordingly
-			else{
-	    	    bar.xcoord = bar.xcoord + 5*window.speed;
+    var friction = 0;
+    var vnew = bar.velocity + bar.acceleration;
+    if(vnew <= bar.vMax && vnew >= bar.vMin)
+        bar.velocity = vnew;
 
-			}
-            break;
-        default:
-            break;
+    if(bar.acceleration === 0){
+        if(bar.velocity > 0)
+            friction = -.5;
+        else if(bar.velocity < 0)
+            friction = .5;
     }
+
+    bar.velocity+=friction;
     
+    var xNew = bar.xcoord + bar.velocity;
+    if(xNew < 0){
+        xNew = 0;
+        bar.dLock = 0;
+        bar.velocity = 0;
+        bar.acceleration = 0;
+    }
+    else if(xNew+bar.w > canvas.width){
+        xNew = canvas.width - bar.w;
+        bar.dLock = 0;
+        bar.velocity = 0;
+        bar.acceleration = 0;
+    }
+    bar.xcoord = xNew;
+
 
 }
 
