@@ -1,4 +1,4 @@
-//Global variables
+//Globar variables
 //canvas element
 window.canvas = document.getElementById("myCanvas");
 //context element
@@ -20,12 +20,23 @@ window.onload = function(){
 var boxGrid = function(){
 	var exports = {};
 
-	//Leave space between each bbar.dLock
+	//Leave space between each block
 	exports.buffer = 2;
 
 	//The number of rows and columns
 	exports.rowNums = 2;
 	exports.colNums = 5;
+    
+    var arr = Array(exports.rowNums);
+
+    for(var y = 0; y < exports.rowNums; y++) {
+        arr[y] = Array(exports.colNums);
+        for(var x = 0; x<exports.colNums; x++) {
+            arr[y][x] = true;
+        }
+    }
+
+    exports.blocks = arr;
 
 
 	//The coordinates of the grid
@@ -38,9 +49,26 @@ var boxGrid = function(){
 	exports.h = window.canvas.height*.6 - exports.ycoord*2;
 
 	//The width and height of each slot
-	exports.colWidth = exports.w/exports.colNums;
-	exports.rowWidth = exports.h/exports.rowNums;
+	exports.blockWidth = exports.w/exports.colNums;
+	exports.blockHeight = exports.h/exports.rowNums;
 
+    exports.inGrid = function(x, y){
+        return (x > exports.xcoord && x < exports.xcoord + exports.w) &&
+               (y > exports.ycoord && y < exports.ycoord + exports.h);
+    }
+
+    exports.breakBlock = function(obj,x,y){
+        var row = Math.floor((y - exports.ycoord) / exports.blockHeight);
+        var col = Math.floor((x - exports.xcoord) / exports.blockWidth);
+
+        if(!exports.blocks[row][col])
+            return;
+        
+        exports.blocks[row][col] = false;
+        //decide which way ball should bounce based on which edge its closest to
+        var xOffset = row*exports.blockWidth + exports.xcoord;
+        var yOffset = col*exports.blockHeight + exports.ycoord;
+    }
 
 	return exports;
 
@@ -82,8 +110,10 @@ var bar = function(){
     exports.vMin = -14;
     exports.velocity = 0;
     exports.acceleration = 0;
-    exports.dLock = 0;
-	
+    
+    //semaphore for keys to make smoother change of directions
+    exports.dLock = 0; 	
+    
     exports.image = new Image();
 	exports.xcoord = 300;
 	exports.ycoord = 530;
@@ -124,6 +154,12 @@ var ball = function(){
 	exports.image = new Image();
 	exports.image.src = "assets/ball.png";
 
+    //checks if ball is intersecting rectangular region (x1,y1) ,(x2,y2)
+    //if so, ball bounces and returns true, if not, returns false
+    exports.intersect = function(x1,y1,x2,y2) {
+        
+    }
+
 
 	return exports;
 }();
@@ -138,6 +174,7 @@ function drawBall(){
 		}
 		else{
 			checkBounds();
+            checkBallHit();
 			ball.y = ball.y + ball.yVelocity;
             ball.x = ball.x + ball.xVelocity;
 			window.ctx.drawImage(ball.image, ball.x, ball.y, ball.w, ball.h);
@@ -168,7 +205,7 @@ function draw(keyCode) {
 		// 	ctx.lineTo(currX, boxGrid.h + currY);
 		// 	ctx.closePath();
 		//     ctx.stroke();
-		// 	currX = currX + boxGrid.colWidth;
+		// 	currX = currX + boxGrid.blockWidth;
 		// }
 
 		// //Now the rows
@@ -179,25 +216,28 @@ function draw(keyCode) {
 		// 	ctx.lineTo(boxGrid.w + currX, currY);
 		// 	ctx.closePath();
 		//     ctx.stroke();
-		// 	currY = currY + boxGrid.rowWidth;
+		// 	currY = currY + boxGrid.blockHeight;
 		// }
 
 		//Iterate through the grid and draw boxes in each slot
 		for(i = 0; i < boxGrid.colNums; i++){
 			for(j = 0; j < boxGrid.rowNums; j++){
+                
+                if(!boxGrid.blocks[j][i])
+                    continue;
 
 				//width of the box
-				var w = boxGrid.colWidth;
+				var w = boxGrid.blockWidth;
 
 				//Height of the box
-				var h = boxGrid.rowWidth;
+				var h = boxGrid.blockHeight;
 
 
 				//x coordinate of the box
-				var xcoord = (boxGrid.xcoord + boxGrid.colWidth*i);
+				var xcoord = (boxGrid.xcoord + boxGrid.blockWidth*i);
 
 				//y coordinate of the box
-				var ycoord = (boxGrid.ycoord + boxGrid.rowWidth*j);
+				var ycoord = (boxGrid.ycoord + boxGrid.blockHeight*j);
 
 				window.ctx.drawImage(box.image, xcoord, ycoord, w - boxGrid.buffer, h - boxGrid.buffer);
 			}
@@ -213,6 +253,22 @@ function checkBounds(){
     if(ball.x < 0 || ball.x+ball.h > canvas.width)
         ball.xVelocity = -1 * ball.xVelocity;
 
+}
+
+function checkBallHit(){
+    //Check all four corners
+
+    if(boxGrid.inGrid(ball.x, ball.y))
+        boxGrid.breakBlock(ball, ball.x, ball.y);
+
+    if(boxGrid.inGrid(ball.x+ball.w, ball.y))
+        boxGrid.breakBlock(ball, ball.x+ball.w, ball.y);
+
+    if(boxGrid.inGrid(ball.x+ball.w, ball.y+ball.h))
+        boxGrid.breakBlock(ball, ball.x+ball.w, ball.y+ball.h);
+
+    if(boxGrid.inGrid(ball.x, ball.y+ball.h))
+        boxGrid.breakBlock(ball, ball.x, ball.y+ball.h);
 }
 
 //Event Listeners
