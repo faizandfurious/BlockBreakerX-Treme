@@ -200,17 +200,30 @@ function draw(keyCode) {
 		//Redraw the current box objects on the screen
 		for(var i = 0; i < boxArray.length; i++){
 			window.ctx.drawImage(boxArray[i].image, boxArray[i].xcoord, boxArray[i].ycoord, boxArray[i].w - boxGrid.buffer, boxArray[i].h - boxGrid.buffer);
+			window.ctx.save();
+			window.ctx.fillStyle = '#f00';
+			window.ctx.font = 'italic bold 10px sans-serif';
+			window.ctx.textBaseline = 'bottom';
+			window.ctx.fillText(i, boxArray[i].xcoord, boxArray[i].ycoord);
+			window.ctx.restore();
 		}
 	}
 }
 
 function checkBounds(){
+	console.log("ball y is " + ball.y + ", and bar y is " + bar.ycoord);
     if(ball.y+ball.h > canvas.height)
         endGame();
     if(ball.y < 0)
         ball.yVelocity = -1 * ball.yVelocity;
     if(ball.x < 0 || ball.x+ball.h > canvas.width)
         ball.xVelocity = -1 * ball.xVelocity;
+
+    //Check if ball hits the bar
+    if(ball.y <= bar.ycoord + 1 && ball.y > bar.ycoord - ball.w)
+    	if(ball.x <= bar.xcoord + bar.w && ball.x >= bar.xcoord)
+    		ball.yVelocity = -1 * ball.yVelocity;
+    
 
 }
 
