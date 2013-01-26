@@ -8,8 +8,11 @@ window.ctx = canvas.getContext("2d");
 window.speed = 1;
 window.stop = false;
 window.lives = 5;
+window.boxArray = [];
+window.finished = false;
 
 window.onload = function(){
+	setUpGame();
 	setInterval(function(){
 		if(!window.stop){
         moveBar();
@@ -131,6 +134,42 @@ var boxGrid = function(){
 
 }();
 
+//This function is called at the start of the game. It sets up the box grid with the appropriate boxes.
+function setUpGame(){
+	//Iterate through the grid and draw boxes in each slot
+	for(i = 0; i < boxGrid.colNums; i++){
+		for(j = 0; j < boxGrid.rowNums; j++){
+			//width of the box
+			var w = boxGrid.colWidth;
+
+			//Height of the box
+			var h = boxGrid.rowWidth;
+
+
+			//x coordinate of the box
+			var xcoord = (boxGrid.xcoord + boxGrid.colWidth*i);
+
+			//y coordinate of the box
+			var ycoord = (boxGrid.ycoord + boxGrid.rowWidth*j);
+
+
+			var box = new Box("assets/box.png", xcoord, ycoord, w, h);
+			window.ctx.drawImage(box.image, xcoord, ycoord, w - boxGrid.buffer, h - boxGrid.buffer);
+			boxArray.push(box);
+
+			//DEBUGGING PURPOSES
+			window.ctx.save();
+			window.ctx.fillStyle = '#f00';
+			window.ctx.font = 'italic bold 10px sans-serif';
+			window.ctx.textBaseline = 'bottom';
+			window.ctx.fillText(i + ", " + j, xcoord, ycoord);
+			window.ctx.restore();
+
+		}
+	}
+	console.log(boxArray);
+}
+
 //This function starts the ball's motion.
 function beginGame(){
 	if(ball.state === 0){
@@ -183,14 +222,15 @@ var bar = function(){
 }();
 
 //The box object
-var box = function(){
-	var exports = {};
+function Box(imageSrc, xcoord, ycoord, w, h){
 
-	exports.image = new Image();
-	exports.image.src = "assets/box.png";
-
-	return exports;
-}();
+	this.image = new Image();
+	this.image.src = imageSrc;
+	this.xcoord = xcoord;
+	this.ycoord = ycoord;
+	this.w = w;
+	this.h = h;
+};
 
 //The ball object
 var ball = function(){
@@ -251,65 +291,34 @@ function draw(keyCode) {
 		drawBall();
 
 		window.ctx.fillText("Lives left: " + window.lives, 10, 10);
-
-		//Draw the grid
-		// //First the columns
-		// var currX = boxGrid.xcoord;
-		// var currY = boxGrid.ycoord;
-		// for(var i = 0; i <= boxGrid.colNums; i++){
-		// 	window.ctx.beginPath();
-		// 	window.ctx.moveTo(currX, currY);
-		// 	console.log(currX);
-		// 	ctx.lineTo(currX, boxGrid.h + currY);
-		// 	ctx.closePath();
-		//     ctx.stroke();
-		// 	currX = currX + boxGrid.blockWidth;
-		// }
-
-		// //Now the rows
-		// var currX = boxGrid.xcoord;
-		// for(var i = 0; i <= boxGrid.rowNums; i++){
-		// 	window.ctx.beginPath();
-		// 	window.ctx.moveTo(currX, currY);
-		// 	ctx.lineTo(boxGrid.w + currX, currY);
-		// 	ctx.closePath();
-		//     ctx.stroke();
-		// 	currY = currY + boxGrid.blockHeight;
-		// }
-
-		//Iterate through the grid and draw boxes in each slot
-		for(i = 0; i < boxGrid.colNums; i++){
-			for(j = 0; j < boxGrid.rowNums; j++){
-                
-                if(!boxGrid.blocks[j][i])
-                    continue;
-
-				//width of the box
-				var w = boxGrid.blockWidth;
-
-				//Height of the box
-				var h = boxGrid.blockHeight;
-
-
-				//x coordinate of the box
-				var xcoord = (boxGrid.xcoord + boxGrid.blockWidth*i);
-
-				//y coordinate of the box
-				var ycoord = (boxGrid.ycoord + boxGrid.blockHeight*j);
-
-				window.ctx.drawImage(box.image, xcoord, ycoord, w - boxGrid.buffer, h - boxGrid.buffer);
-			}
+		
+		//Redraw the current box objects on the screen
+		for(var i = 0; i < boxArray.length; i++){
+			window.ctx.drawImage(boxArray[i].image, boxArray[i].xcoord, boxArray[i].ycoord, boxArray[i].w - boxGrid.buffer, boxArray[i].h - boxGrid.buffer);
+			window.ctx.save();
+			window.ctx.fillStyle = '#f00';
+			window.ctx.font = 'italic bold 10px sans-serif';
+			window.ctx.textBaseline = 'bottom';
+			window.ctx.fillText(i, boxArray[i].xcoord, boxArray[i].ycoord);
+			window.ctx.restore();
 		}
 	}
 }
 
 function checkBounds(){
+	console.log("ball y is " + ball.y + ", and bar y is " + bar.ycoord);
     if(ball.y+ball.h > canvas.height)
         endGame();
     if(ball.y < 0)
         ball.yVelocity = -1 * ball.yVelocity;
     if(ball.x < 0 || ball.x+ball.h > canvas.width)
         ball.xVelocity = -1 * ball.xVelocity;
+
+    //Check if ball hits the bar
+    if(ball.y <= bar.ycoord + 1 && ball.y > bar.ycoord - ball.w)
+    	if(ball.x <= bar.xcoord + bar.w && ball.x >= bar.xcoord)
+    		ball.yVelocity = -1 * ball.yVelocity;
+    
 
 }
 
