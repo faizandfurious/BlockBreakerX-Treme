@@ -1,3 +1,4 @@
+
 //Globar variables
 //canvas element
 window.canvas = document.getElementById("myCanvas");
@@ -57,17 +58,73 @@ var boxGrid = function(){
                (y > exports.ycoord && y < exports.ycoord + exports.h);
     }
 
-    exports.breakBlock = function(obj,x,y){
-        var row = Math.floor((y - exports.ycoord) / exports.blockHeight);
-        var col = Math.floor((x - exports.xcoord) / exports.blockWidth);
-
-        if(!exports.blocks[row][col])
-            return;
+    function breakBlockByCorner(obj,x,y){
+        var row = getBrickRow(x,y);
+        var col = getBrickCol(x,y); 
         
-        exports.blocks[row][col] = false;
-        //decide which way ball should bounce based on which edge its closest to
-        var xOffset = row*exports.blockWidth + exports.xcoord;
-        var yOffset = col*exports.blockHeight + exports.ycoord;
+        //if there's no longer a block there do nothing
+        if(!exports.blocks[row][col])
+            return false;
+        
+        
+
+        return true;
+    }
+
+    function getBrickRow(x,y){
+        return Math.floor((y - exports.ycoord) / exports.blockHeight);
+    }
+    function getBrickCol(x,y){
+        return Math.floor((x - exports.xcoord) / exports.blockWidth);
+    }
+
+    exports.breakBlock = function(obj){
+
+        //Array keeping track of which corners overlap block to 
+        //determine which direction ball should bounce 
+        //[top left, top right, bottom right, bottom left]
+        var bounceDirection = [false,false,false,false];
+
+        var remove = false;
+        var removeList = [];
+
+        //Check all four corners
+        if(boxGrid.inGrid(ball.x, ball.y)){
+            remove = true;
+            removeList.push(getBrickRow(ball.x, ball.y));
+            removeList.push(getBrickCol(ball.x, ball.y));
+            bounceDirection[0] = breakBlockByCorner(ball, ball.x, ball.y);
+        }
+
+        if(boxGrid.inGrid(ball.x+ball.w, ball.y)){
+            remove = true;
+            removeList.push(getBrickRow(ball.x+ball.w, ball.y));
+            removeList.push(getBrickCol(ball.x+ball.w, ball.y));
+            bounceDirection[1] = breakBlockByCorner(ball, ball.x+ball.w, ball.y);
+        }
+
+        if(boxGrid.inGrid(ball.x+ball.w, ball.y+ball.h)){
+            remove = true;
+            removeList.push(getBrickRow(ball.x+ball.w, ball.y+ball.h));
+            removeList.push(getBrickCol(ball.x+ball.w, ball.y+ball.h));
+            bounceDirection[2] = breakBlockByCorner(ball, ball.x+ball.w, ball.y+ball.h);
+        }
+
+        if(boxGrid.inGrid(ball.x, ball.y+ball.h)){
+            remove = true;
+            removeList.push(getBrickRow(ball.x, ball.y+ball.h));
+            removeList.push(getBrickCol(ball.x, ball.y+ball.h));
+            bounceDirection[3] = breakBlockByCorner(ball, ball.x, ball.y+ball.h);
+        }
+        
+        //if there is a block there remove it
+        if(remove)
+            for(var i = 0; i<removeList.length; i+=2)
+                exports.blocks[+removeList[i]][+removeList[i+1]] = false;
+
+           
+        return bounceDirection;
+            
     }
 
 	return exports;
@@ -175,6 +232,7 @@ function drawBall(){
 		else{
 			checkBounds();
             checkBallHit();
+            checkBarHit();
 			ball.y = ball.y + ball.yVelocity;
             ball.x = ball.x + ball.xVelocity;
 			window.ctx.drawImage(ball.image, ball.x, ball.y, ball.w, ball.h);
@@ -256,19 +314,73 @@ function checkBounds(){
 }
 
 function checkBallHit(){
-    //Check all four corners
+    
+    var bounceDirection = boxGrid.breakBlock(ball);
 
-    if(boxGrid.inGrid(ball.x, ball.y))
-        boxGrid.breakBlock(ball, ball.x, ball.y);
+    //construct binary representation of direction for switch statement 
+    var binaryDirection = 0;
+    for(var i = 0; i< 4 ; i++)
+        if(bounceDirection[i])
+            binaryDirection += Math.pow(2,(3-i));
+    
+    switch(binaryDirection){
+        case 0:
+            break;
+        case 1:
+        case 11:
+            ball.xVelocity = Math.abs(ball.xVelocity);
+            ball.yVelocity = -1*Math.abs(ball.yVelocity);
+            break;
+        case 2:
+        case 7:
+            ball.xVelocity = -1*Math.abs(ball.xVelocity);
+            ball.yVelocity = -1*Math.abs(ball.yVelocity);
+            break;
+        case 3:
+            ball.yVelocity = -1*Math.abs(ball.yVelocity);
+            break;
+        case 4:
+        case 14:
+            ball.xVelocity = -1*Math.abs(ball.xVelocity);
+            ball.yVelocity = Math.abs(ball.yVelocity);
+            break; 
+        case 15:
+            ball.xVelocity = -1*Math.abs(ball.xVelocity);
+            ball.yVelocity = Math.abs(ball.yVelocity);
+            break;
+        case 5:
+            break;
+        case 6:
+            ball.xVelocity = -1*Math.abs(ball.xVelocity);
+            break;
+        case 8:
+        case 13:
+            ball.xVelocity = Math.abs(ball.xVelocity);
+            ball.yVelocity = Math.abs(ball.yVelocity);
+            break;
+        case 9:
+            ball.xVelocity = Math.abs(ball.xVelocity);
+            break;
+        case 10:
+            break;
+        case 12:
+            ball.yVelocity = Math.abs(ball.yVelocity);
+            break;
+        default:
+            break;
+    } 
+}
 
-    if(boxGrid.inGrid(ball.x+ball.w, ball.y))
-        boxGrid.breakBlock(ball, ball.x+ball.w, ball.y);
-
-    if(boxGrid.inGrid(ball.x+ball.w, ball.y+ball.h))
-        boxGrid.breakBlock(ball, ball.x+ball.w, ball.y+ball.h);
-
-    if(boxGrid.inGrid(ball.x, ball.y+ball.h))
-        boxGrid.breakBlock(ball, ball.x, ball.y+ball.h);
+function checkBarHit() {
+    if(ball.y + ball.h > bar.ycoord)
+        if(ball.x > bar.xcoord && ball.x + ball.w < bar.xcoord + bar.w){
+            ball.xVelocity += bar.velocity/2;
+            if(ball.xVelocity > bar.vMax)
+                ball.xVelocity = bar.vMax;
+            else if(ball.xVelocity < bar.vMin)
+                ball.xVelocity = bar.vMin;
+            ball.yVelocity = -1*Math.abs(ball.yVelocity);
+        }
 }
 
 //Event Listeners
