@@ -25,7 +25,7 @@ var boxGrid = function(){
 	exports.buffer = 2;
 
 	//The number of rows and columns
-	exports.rowNums = 2;
+	exports.rowNums = 5;
 	exports.colNums = 5;
     
     var arr = Array(exports.rowNums);
@@ -372,7 +372,7 @@ function checkBallHit(){
 }
 
 function checkBarHit() {
-    if(ball.y + ball.h > bar.ycoord)
+    if(ball.y + ball.h > bar.ycoord && ball.y < bar.ycoord + bar.h/2)
         if(ball.x > bar.xcoord && ball.x + ball.w < bar.xcoord + bar.w){
             ball.xVelocity += bar.velocity/2;
             if(ball.xVelocity > bar.vMax)
