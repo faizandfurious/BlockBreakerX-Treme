@@ -1,5 +1,4 @@
-//Global variables
-
+//Globar variables
 //canvas element
 window.canvas = document.getElementById("myCanvas");
 //context element
@@ -8,12 +7,9 @@ window.ctx = canvas.getContext("2d");
 window.speed = 1;
 window.stop = false;
 window.lives = 5;
-window.boxArray = [];
-window.finished = false;
-window.powerArray = [];
+window.win = false;
 
 window.onload = function(){
-	setUpGame();
 	setInterval(function(){
 		if(!window.stop){
         moveBar();
@@ -25,12 +21,23 @@ window.onload = function(){
 var boxGrid = function(){
 	var exports = {};
 
-	//Leave space between each bbar.dLock
+	//Leave space between each block
 	exports.buffer = 2;
 
 	//The number of rows and columns
 	exports.rowNums = 2;
 	exports.colNums = 5;
+    
+    var arr = Array(exports.rowNums);
+
+    for(var y = 0; y < exports.rowNums; y++) {
+        arr[y] = Array(exports.colNums);
+        for(var x = 0; x<exports.colNums; x++) {
+            arr[y][x] = true;
+        }
+    }
+
+    exports.blocks = arr;
 
 
 	//The coordinates of the grid
@@ -43,8 +50,8 @@ var boxGrid = function(){
 	exports.h = window.canvas.height*.6 - exports.ycoord*2;
 
 	//The width and height of each slot
-	exports.colWidth = exports.w/exports.colNums;
-	exports.rowWidth = exports.h/exports.rowNums;
+	exports.blockWidth = exports.w/exports.colNums;
+	exports.blockHeight = exports.h/exports.rowNums;
 
     exports.inGrid = function(x, y){
         return (x > exports.xcoord && x < exports.xcoord + exports.w) &&
@@ -54,10 +61,9 @@ var boxGrid = function(){
     function breakBlockByCorner(obj,x,y){
         var row = getBrickRow(x,y);
         var col = getBrickCol(x,y); 
-
+        
         //if there's no longer a block there do nothing
         if(!exports.blocks[row][col])
-
             return false;
         
         
@@ -125,41 +131,6 @@ var boxGrid = function(){
 
 }();
 
-//This function is called at the start of the game. It sets up the box grid with the appropriate boxes.
-function setUpGame(){
-	//Iterate through the grid and draw boxes in each slot
-	for(i = 0; i < boxGrid.colNums; i++){
-		for(j = 0; j < boxGrid.rowNums; j++){
-			//width of the box
-			var w = boxGrid.colWidth;
-
-			//Height of the box
-			var h = boxGrid.rowWidth;
-
-
-			//x coordinate of the box
-			var xcoord = (boxGrid.xcoord + boxGrid.colWidth*i);
-
-			//y coordinate of the box
-			var ycoord = (boxGrid.ycoord + boxGrid.rowWidth*j);
-
-
-			var box = new Box("assets/box.png", xcoord, ycoord, w, h);
-			window.ctx.drawImage(box.image, xcoord, ycoord, w - boxGrid.buffer, h - boxGrid.buffer);
-			boxArray.push(box);
-
-			//DEBUGGING PURPOSES
-			window.ctx.save();
-			window.ctx.fillStyle = '#f00';
-			window.ctx.font = 'italic bold 10px sans-serif';
-			window.ctx.textBaseline = 'bottom';
-			window.ctx.fillText(i + ", " + j, xcoord, ycoord);
-			window.ctx.restore();
-
-		}
-	}
-}
-
 //This function starts the ball's motion.
 function beginGame(){
 	if(ball.state === 0){
@@ -186,6 +157,17 @@ function endGame(){
 	}
 }
 
+function winGame(){
+		window.stop = true;
+		window.ctx.save();
+		window.ctx.fillStyle = '#f00';
+		window.ctx.font = 'italic bold 50px sans-serif';
+		window.ctx.textBaseline = 'bottom';
+		window.ctx.fillText('YOU WIN!', 100, 350);
+		window.ctx.restore();
+
+}
+
 
 
 //The bar object
@@ -196,8 +178,10 @@ var bar = function(){
     exports.vMin = -14;
     exports.velocity = 0;
     exports.acceleration = 0;
-    exports.dLock = 0;
-	
+    
+    //semaphore for keys to make smoother change of directions
+    exports.dLock = 0; 	
+    
     exports.image = new Image();
 	exports.xcoord = 300;
 	exports.ycoord = 530;
@@ -210,15 +194,14 @@ var bar = function(){
 }();
 
 //The box object
-function Box(imageSrc, xcoord, ycoord, w, h){
+var box = function(){
+	var exports = {};
 
-	this.image = new Image();
-	this.image.src = imageSrc;
-	this.xcoord = xcoord;
-	this.ycoord = ycoord;
-	this.w = w;
-	this.h = h;
-};
+	exports.image = new Image();
+	exports.image.src = "assets/box.png";
+
+	return exports;
+}();
 
 //The ball object
 var ball = function(){
@@ -239,29 +222,15 @@ var ball = function(){
 	exports.image = new Image();
 	exports.image.src = "assets/ball.png";
 
+    //checks if ball is intersecting rectangular region (x1,y1) ,(x2,y2)
+    //if so, ball bounces and returns true, if not, returns false
+    exports.intersect = function(x1,y1,x2,y2) {
+        
+    }
+
 
 	return exports;
 }();
-
-//The powerup object
-var powerUp = function(){
-	var exports = {};
-
-	exports.x = 30;
-	exports.y = 30;
-	exports.w = 30;
-	exports.h = 30;
-
-	exports.image = new Image();
-	exports.image.src = "assets/ball.png";
-
-	return exports;
-
-}();
-
-function drawPowerUp(){
-	window.ctx.drawImage(powerUp.image, powerUp.x, ++powerUp.y, powerUp.w, powerUp.h);
-}
 
 
 function drawBall(){
@@ -275,7 +244,6 @@ function drawBall(){
 			checkBounds();
             checkBallHit();
             checkBarHit();
-
 			ball.y = ball.y + ball.yVelocity;
             ball.x = ball.x + ball.xVelocity;
 			window.ctx.drawImage(ball.image, ball.x, ball.y, ball.w, ball.h);
@@ -284,36 +252,67 @@ function drawBall(){
 }
 
 function draw(keyCode) {
+	if(win){
+		winGame();
+	}
 	if(!stop){
 		//Clears the entire canvas
 		window.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		if(typeof(keyCode) === 'object'){
-		//Draws the bar
-		bar.xcoord = keyCode.x - bar.w/2;
-		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
-		}
-
-		else{
 		//Draws the bar
 		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
-		}
 
 		drawBall();
 
-		drawPowerUp();
-
 		window.ctx.fillText("Lives left: " + window.lives, 10, 10);
 
-		//Redraw the current box objects on the screen
-		for(var i = 0; i < boxArray.length; i++){
-			window.ctx.drawImage(boxArray[i].image, boxArray[i].xcoord, boxArray[i].ycoord, boxArray[i].w - boxGrid.buffer, boxArray[i].h - boxGrid.buffer);
-			window.ctx.save();
-			window.ctx.fillStyle = '#f00';
-			window.ctx.font = 'italic bold 10px sans-serif';
-			window.ctx.textBaseline = 'bottom';
-			window.ctx.fillText(i, boxArray[i].xcoord, boxArray[i].ycoord);
-			window.ctx.restore();
+		//Draw the grid
+		// //First the columns
+		// var currX = boxGrid.xcoord;
+		// var currY = boxGrid.ycoord;
+		// for(var i = 0; i <= boxGrid.colNums; i++){
+		// 	window.ctx.beginPath();
+		// 	window.ctx.moveTo(currX, currY);
+		// 	console.log(currX);
+		// 	ctx.lineTo(currX, boxGrid.h + currY);
+		// 	ctx.closePath();
+		//     ctx.stroke();
+		// 	currX = currX + boxGrid.blockWidth;
+		// }
+
+		// //Now the rows
+		// var currX = boxGrid.xcoord;
+		// for(var i = 0; i <= boxGrid.rowNums; i++){
+		// 	window.ctx.beginPath();
+		// 	window.ctx.moveTo(currX, currY);
+		// 	ctx.lineTo(boxGrid.w + currX, currY);
+		// 	ctx.closePath();
+		//     ctx.stroke();
+		// 	currY = currY + boxGrid.blockHeight;
+		// }
+
+		//Iterate through the grid and draw boxes in each slot
+		for(i = 0; i < boxGrid.colNums; i++){
+			for(j = 0; j < boxGrid.rowNums; j++){
+                
+                if(!boxGrid.blocks[j][i])
+                    continue;
+
+				//width of the box
+				var w = boxGrid.blockWidth;
+
+				//Height of the box
+				var h = boxGrid.blockHeight;
+
+
+				//x coordinate of the box
+				var xcoord = (boxGrid.xcoord + boxGrid.blockWidth*i);
+
+				//y coordinate of the box
+				var ycoord = (boxGrid.ycoord + boxGrid.blockHeight*j);
+
+				window.ctx.drawImage(box.image, xcoord, ycoord, w - boxGrid.buffer, h - boxGrid.buffer);
+			}
 		}
 	}
 }
@@ -326,14 +325,7 @@ function checkBounds(){
     if(ball.x < 0 || ball.x+ball.h > canvas.width)
         ball.xVelocity = -1 * ball.xVelocity;
 
-    //Check if ball hits the bar
-    if(ball.y <= bar.ycoord + 1 && ball.y > bar.ycoord - ball.w)
-    	if(ball.x <= bar.xcoord + bar.w && ball.x >= bar.xcoord)
-    		ball.yVelocity = -1 * ball.yVelocity;
-    
-
 }
-
 
 function checkBallHit(){
     
@@ -405,7 +397,6 @@ function checkBarHit() {
         }
 }
 
-
 //Event Listeners
 
 
@@ -447,20 +438,13 @@ function onKeyDown(event) {
 	//Space bar. Used to begin game.
 	else if(event.keyCode == 32){
 		beginGame();
-		powerArray.push(powerUp);
 	}
 
 	draw(event.keyCode);
 }
 
-function mouseMove(event){
-	draw(event);
-}
-
 canvas.addEventListener('keydown', onKeyDown, false);
 canvas.addEventListener('keyup', onKeyUp, false);
-canvas.addEventListener('mousemove', mouseMove, false);
-
 
 /**
 * New Event listener function that listens for keydown manually on given time interval
@@ -501,10 +485,6 @@ function moveBar()
 
 }
 
-function powerUp(){
-
-
-}
 
 
 
@@ -517,9 +497,6 @@ function onMouseDown(event) {
 
 }
 canvas.addEventListener('mousedown', onMouseDown, false);
-
-
-
 
 
 
