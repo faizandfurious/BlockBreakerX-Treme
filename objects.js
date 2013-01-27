@@ -27,6 +27,7 @@ var box = function(){
 
 	exports.image = new Image();
 	exports.image.src = "assets/box.png";
+	exports.powerup = -1;
 
 	return exports;
 }();
