@@ -74,9 +74,10 @@ function drawBall(){
 }
 
 function draw(keyCode) {
-	if(win){
+	if(grid.count() === 0){
 		winGame();
 	}
+
 	if(!stop){
 		//Clears the entire canvas
 		window.ctx.clearRect(0, 0, canvas.width, canvas.height);

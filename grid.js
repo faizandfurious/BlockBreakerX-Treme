@@ -108,6 +108,21 @@ var grid = function(){
             
     }
 
+    //Returns the count of blocks left
+    exports.count = function(){
+        var num = 0;
+        for(var y = 0; y < exports.rowNums; y++) {
+            for(var x = 0; x<exports.colNums; x++) {
+                //Checks if there is a block at that position
+                if(exports.blocks[y][x]){
+                    ++num;
+                }
+            }
+        }
+
+        return num;
+    }
+
 	return exports;
 
 }();
