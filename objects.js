@@ -59,3 +59,22 @@ var ball = function(){
 
 	return exports;
 }();
+
+var powerup = function(){
+	var exports = {};
+	exports.type = "";
+
+	exports.x = 0;
+	exports.y = 0;
+	exports.w = 50;
+	exports.h = 50;
+	exports.image = new Image();
+	exports.image.src = "assets/box.png";
+
+	return exports;
+}();
+
+
+
+
+
