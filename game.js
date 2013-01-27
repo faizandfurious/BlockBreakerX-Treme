@@ -373,7 +373,7 @@ function checkBallHit(){
 
 function checkBarHit() {
     if(ball.y + ball.h > bar.ycoord && ball.y < bar.ycoord + bar.h/2)
-        if(ball.x > bar.xcoord && ball.x + ball.w < bar.xcoord + bar.w){
+        if(ball.x + ball.w > bar.xcoord && ball.x < bar.xcoord + bar.w){
             ball.xVelocity += bar.velocity/2;
             if(ball.xVelocity > bar.vMax)
                 ball.xVelocity = bar.vMax;
