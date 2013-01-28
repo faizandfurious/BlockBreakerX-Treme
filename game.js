@@ -10,6 +10,7 @@ window.win = false;
 window.powering = false;
 window.pArray = new Array(5);
 
+largeBar = false;
 startString = "Start";
 instructions = "Instructions";
 level = 0;
@@ -146,9 +147,7 @@ function draw(keyCode) {
 
 		}
 		else{		
-			if(powering){
-				drawPowerups();
-			}
+			drawPowerups();
 			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 			window.ctx.fillRect(0,0,600,40);
 			window.ctx.fillStyle = "rgb(100, 100, 100)";

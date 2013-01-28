@@ -92,7 +92,14 @@ function checkPowerup(obj){
 function checkPowerupHitBar(obj){
     if(obj.y + obj.h > bar.ycoord && obj.y < bar.ycoord + bar.h/2)
         if(obj.x + obj.w > bar.xcoord && obj.x < bar.xcoord + bar.w){
-
+            if(obj.type === 0){
+                ball.w = ball.w*3;
+                ball.h = ball.h*3;
+                setTimeout(function(){
+                    ball.w = ball.w/3;
+                    ball.h = ball.h/3;
+                }, 4000);
+            }
             pArray[pArray.indexOf(obj)] = 0;
         }
 }
