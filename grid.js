@@ -33,17 +33,19 @@ var grid = function(){
         for(var x = 0; x<exports.colNums; x++) {
             var xcoord = exports.xcoord + exports.blockHeight*x;
             var ycoord = exports.ycoord + exports.blockHeight*y;
-            var b = new box(xcoord, ycoord);
+            var b = new box(xcoord, ycoord, 0);
             arr[y][x] = b;
         }
     }
 
     //Randomly add powerups to boxes
     for(var i = 0; i < 5; i++){
-        var rand = arr[Math.floor(Math.random() * exports.rowNums)][Math.floor(Math.random() * exports.colNums)];
-        arr[Math.floor(Math.random() * exports.rowNums)][Math.floor(Math.random() * exports.colNums)] = new box(rand.x, rand.y, 0);
+        var x = Math.floor(Math.random() * exports.rowNums);
+        var y = Math.floor(Math.random() * exports.colNums);
+        var rand = arr[x][y];
+        arr[x][y] = new box(rand.x, rand.y, new powerup(rand.x, rand.y, exports.blockWidth, exports.blockHeight));
     }
-    console.log(arr);
+
     exports.blocks = arr;
     
     //integer array representing transparency of broken block images
@@ -122,7 +124,7 @@ var grid = function(){
             for(var i = 0; i<removeList.length; i+=2){
                 if(exports.blocks[removeList[i]][removeList[i+1]]) {
                     exports.brokenBlocks[removeList[i]][removeList[i+1]] = 100;
-
+                    console.log(exports.blocks[removeList[i]][removeList[i+1]]);
                     //Call the checkPowerup function to activate potential powerups
                     checkPowerup(exports.blocks[removeList[i]][removeList[i+1]]);
                     exports.blocks[removeList[i]][removeList[i+1]] = false;

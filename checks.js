@@ -82,18 +82,17 @@ function checkBarHit() {
 
 //This function is used to check to see if a powerup should be initiated
 function checkPowerup(obj){
-    if(obj.powerup >= 0){
-        var pu = new powerup();
-        pu.x = obj.x;
-        pu.y = obj.y;
-        dropPowerup(pu);
+    console.log("box's coordinates are: " + obj.x + ", " + obj.y);
+    if(typeof(obj.p) === 'object'){
+        console.log("powerup's coordinates are: " + obj.p.x + ", " + obj.p.y);
+        dropPowerup(obj.p);
     }
 }
 
 function checkPowerupHitBar(obj){
     if(obj.y + obj.h > bar.ycoord && obj.y < bar.ycoord + bar.h/2)
         if(obj.x + obj.w > bar.xcoord && obj.x < bar.xcoord + bar.w){
-            
+
             pArray[pArray.indexOf(obj)] = 0;
         }
 }
