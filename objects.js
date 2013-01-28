@@ -61,6 +61,48 @@ var ball = function(){
 	return exports;
 }();
 
+var background = function(){
+	var exports = {};
+	exports.image = new Image();
+	exports.sx = 0;
+	exports.sy = 3000;
+	exports.sWidth = 600;
+	exports.sHeight = 600;
+	exports.dx = 0;
+	exports.dy = 0;
+	exports.dWidth = 600;
+	exports.dHeight = 600;
+	exports.image.src = "assets/background.png"
+
+	return exports;
+}();
+
+var life = function(){
+	var exports = {};
+	exports.image = new Image();
+	exports.image.src = "assets/ball.png"
+	return exports;
+}();
+
+function roundedRect(x,y,width,height,radius){
+    window.ctx.beginPath();
+    window.ctx.moveTo(x,y+radius);
+    window.ctx.lineTo(x,y+height-radius);
+    window.ctx.quadraticCurveTo(x,y+height,x+radius,y+height);
+    window.ctx.lineTo(x+width-radius,y+height);
+    window.ctx.quadraticCurveTo(x+width,y+height,x+width,y+height-radius);
+    window.ctx.lineTo(x+width,y+radius);
+    window.ctx.quadraticCurveTo(x+width,y,x+width-radius,y);
+    window.ctx.lineTo(x+radius,y);
+    window.ctx.quadraticCurveTo(x,y,x,y+radius);
+    window.ctx.stroke();
+    window.ctx.save();
+    window.ctx.globalAlpha = 0.5;
+	window.ctx.fillStyle = 'green';
+    window.ctx.fill();
+    window.ctx.restore();
+}
+
 function powerup(){
 	this.type = "";
 

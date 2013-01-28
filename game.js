@@ -6,10 +6,23 @@ window.ctx = canvas.getContext("2d");
 //Bar speed multiplier
 window.speed = 1;
 window.stop = false;
-window.lives = 5;
 window.win = false;
 window.powering = false;
 window.p = new powerup();
+
+startString = "Start";
+instructions = "Instructions";
+level = 0;
+buttonPadding = 30;
+startButtonX = 135;
+instructionButtonX = 285;
+buttonY = 415;
+borderRadius = 10;
+buttonHeight = 45;
+menu = true;
+
+//life 
+lives = 3;
 
 window.onload = function(){
 	setInterval(function(){
@@ -102,45 +115,80 @@ function draw(keyCode) {
 			drawPowerup(p);
 		}
 
-		//Draws the bar
-		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
+		window.ctx.drawImage(background.image,background.sx,background.sy,background.sWidth,
+		background.sHeight,background.dx, background.dy, 600,600);
+		window.ctx.font="30px Consolas";
+		if(level===0){
+			var widthInstructions = window.ctx.measureText(instructions).width;
+			var widthStart = window.ctx.measureText(startString).width;
 
-		drawBall();
+			window.ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
+			roundedRect(startButtonX,buttonY,widthStart+buttonPadding,buttonHeight,borderRadius);
+			window.ctx.fillText(startString, 150, 450);
+			roundedRect(instructionButtonX,buttonY,widthInstructions+buttonPadding,buttonHeight, borderRadius);
+			window.ctx.fillText(instructions, 300, 450);
+		}
+		else if (level === -1){
+			window.ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
 
-		window.ctx.fillText("Lives left: " + window.lives, 10, 10);
+			window.ctx.fillRect(50,50,500,500);
+			window.ctx.fillStyle = "rgb(100, 100, 100)";
+			window.ctx.fillText("Instructions", 100, 100);
+
+			//TO DO: Add button to start game!
 
 
-		//Iterate through the grid and draw boxes in each slot
-		for(i = 0; i < grid.colNums; i++){
-			for(j = 0; j < grid.rowNums; j++){
-
-				//width of the box
-				var w = grid.blockWidth;
-
-				//Height of the box
-				var h = grid.blockHeight;
-
-
-				//x coordinate of the box
-				var xcoord = (grid.xcoord + grid.blockWidth*i);
-
-				//y coordinate of the box
-				var ycoord = (grid.ycoord + grid.blockHeight*j);
-
-				//Create a local variable to store the brokenBox image, as the reference to the box is gone
-				var image = new Image();
-				image.src = "assets/brokenBox.png";
-
-				if(grid.brokenBlocks[j][i] > 0){
-				    window.ctx.globalAlpha = grid.brokenBlocks[j][i]/100;
-                    grid.brokenBlocks[j][i]-= 2;
-                    window.ctx.drawImage(image, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
-                    window.ctx.globalAlpha = 1;
-                    }
-
-                if(!!grid.blocks[j][i])
-                    window.ctx.drawImage(grid.blocks[j][i].boxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+		}
+		else{
+			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
+			window.ctx.fillRect(0,0,600,40);
+			window.ctx.fillStyle = "rgb(100, 100, 100)";
+			window.ctx.fillText("Level: "+level, 10, 28);
+			var lifeX = 480;
+			//loops to draw the various lives
+			for(var i=0 ; i < lives ; i++){
+				window.ctx.drawImage(life.image,lifeX, 8,35, 30);
+				lifeX = lifeX+35;
 			}
+
+			//Draws the bar
+			window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
+
+			drawBall();
+			
+			//Iterate through the grid and draw boxes in each slot
+			for(i = 0; i < grid.colNums; i++){
+				for(j = 0; j < grid.rowNums; j++){
+
+					//width of the box
+					var w = grid.blockWidth;
+
+					//Height of the box
+					var h = grid.blockHeight;
+
+
+					//x coordinate of the box
+					var xcoord = (grid.xcoord + grid.blockWidth*i);
+
+					//y coordinate of the box
+					var ycoord = (grid.ycoord + grid.blockHeight*j);
+
+					//Create a local variable to store the brokenBox image, as the reference to the box is gone
+					var image = new Image();
+					image.src = "assets/brokenBox.png";
+
+					if(grid.brokenBlocks[j][i] > 0){
+					    window.ctx.globalAlpha = grid.brokenBlocks[j][i]/100;
+	                    grid.brokenBlocks[j][i]-= 2;
+	                    window.ctx.drawImage(image, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+	                    window.ctx.globalAlpha = 1;
+	                    }
+
+	                if(!!grid.blocks[j][i])
+	                    window.ctx.drawImage(grid.blocks[j][i].boxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+				}
+			}
+
 		}
 	}
 }
