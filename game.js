@@ -115,7 +115,7 @@ function draw(keyCode) {
                     }
 
                 if(!!grid.blocks[j][i])
-                    window.ctx.drawImage(box.boxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+                    window.ctx.drawImage(grid.blocks[j][i].boxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
 			}
 		}
 	}

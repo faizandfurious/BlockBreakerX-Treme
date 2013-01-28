@@ -15,7 +15,7 @@ var grid = function(){
     for(var y = 0; y < exports.rowNums; y++) {
         arr[y] = Array(exports.colNums);
         for(var x = 0; x<exports.colNums; x++) {
-            arr[y][x] = true;
+            arr[y][x] = box;
         }
     }
 
