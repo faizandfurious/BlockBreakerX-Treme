@@ -1,4 +1,5 @@
-//Creating the grid to place boxes into.
+//Creating the grid to place boxes into. The grid is represented by a 2x2 array that holds boolean values to 
+//determine if a box is there or not
 var grid = function(){
 	var exports = {};
 
