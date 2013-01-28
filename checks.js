@@ -83,11 +83,20 @@ function checkBarHit() {
 //This function is used to check to see if a powerup should be initiated
 function checkPowerup(obj){
     if(obj.powerup >= 0){
-        dropPowerup(obj.powerup);
+        var pu = new powerup();
+        pu.x = obj.x;
+        pu.y = obj.y;
+        dropPowerup(pu);
     }
 }
 
-
+function checkPowerupHitBar(obj){
+    if(obj.y + obj.h > bar.ycoord && obj.y < bar.ycoord + bar.h/2)
+        if(obj.x + obj.w > bar.xcoord && obj.x < bar.xcoord + bar.w){
+            
+            pArray[pArray.indexOf(obj)] = 0;
+        }
+}
 
 
 

@@ -103,11 +103,11 @@ function roundedRect(x,y,width,height,radius){
     window.ctx.restore();
 }
 
-function powerup(){
+function powerup(x, y){
 	this.type = "";
 
-	this.x = 0;
-	this.y = 0;
+	this.x = x;
+	this.y = y;
 	this.w = 50;
 	this.h = 50;
 	this.image = new Image();

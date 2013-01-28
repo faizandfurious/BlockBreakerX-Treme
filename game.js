@@ -8,7 +8,7 @@ window.speed = 1;
 window.stop = false;
 window.win = false;
 window.powering = false;
-window.p = new powerup();
+window.pArray = new Array(5);
 
 startString = "Start";
 instructions = "Instructions";
@@ -69,18 +69,27 @@ function winGame(){
 
 }
 
-function dropPowerup(){
-	powering = true;
-	drawPowerup(p);
+function dropPowerup(pp){
+	if(pp.y < canvas.height){
+		powering = true;
+		pp.y+=3;
+		if(pArray.indexOf(pp) < 0){
+			pArray.push(pp);
+		}
+	}
+
+	else{
+		pArray[pArray.indexOf(pp)] = 0;
+	}
+	drawPowerups();
 }
 
-function drawPowerup(p){
-	if(p.y < canvas.height){
-		p.y++;
-		window.ctx.drawImage(p.image, p.x, p.y, p.w, p.h);
-	}
-	else{
-		powering = false;
+function drawPowerups(){
+	for(var i = 0; i < pArray.length; i++){
+		if(typeof(pArray[i]) != null && typeof pArray[i] == 'object' ){
+			window.ctx.drawImage(pArray[i].image, pArray[i].x, pArray[i].y+=4, pArray[i].w, pArray[i].h);
+			checkPowerupHitBar(pArray[i]);
+		}
 	}
 }
 
@@ -111,9 +120,6 @@ function draw(keyCode) {
 	if(!stop){
 		//Clears the entire canvas
 		window.ctx.clearRect(0, 0, canvas.width, canvas.height);
-		if(powering){
-			drawPowerup(p);
-		}
 
 		window.ctx.drawImage(background.image,background.sx,background.sy,background.sWidth,
 		background.sHeight,background.dx, background.dy, 600,600);
@@ -139,7 +145,10 @@ function draw(keyCode) {
 
 
 		}
-		else{
+		else{		
+			if(powering){
+				drawPowerups();
+			}
 			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 			window.ctx.fillRect(0,0,600,40);
 			window.ctx.fillStyle = "rgb(100, 100, 100)";
@@ -155,7 +164,7 @@ function draw(keyCode) {
 			window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
 
 			drawBall();
-			
+
 			//Iterate through the grid and draw boxes in each slot
 			for(i = 0; i < grid.colNums; i++){
 				for(j = 0; j < grid.rowNums; j++){
