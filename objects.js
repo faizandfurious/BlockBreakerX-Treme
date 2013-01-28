@@ -107,8 +107,11 @@ function roundedRect(x,y,width,height,radius){
 /**
 This object represents the powerup object model. It takes the coordinates of it's origin
 **/
-function powerup(x, y, w, h){
-	this.type = 0;
+function powerup(x, y, w, h, kind){
+    if (kind === undefined)
+        this.kind = 0;
+    else
+    	this.kind = kind;
 
 	this.x = x;
 	this.y = y;

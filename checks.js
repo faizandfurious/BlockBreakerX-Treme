@@ -92,14 +92,35 @@ function checkPowerup(obj){
 function checkPowerupHitBar(obj){
     if(obj.y + obj.h > bar.ycoord && obj.y < bar.ycoord + bar.h/2)
         if(obj.x + obj.w > bar.xcoord && obj.x < bar.xcoord + bar.w){
-            if(obj.type === 0){
+            //Make the ball bigger
+            if(obj.kind === 0){
                 ball.w = ball.w*3;
                 ball.h = ball.h*3;
+                ball.x = ball.x - ball.w/2;
+                ball.y = ball.y - ball.h/2;
                 setTimeout(function(){
+                    ball.x = ball.x + ball.w/2;
+                    ball.y = ball.y + ball.h/2;
                     ball.w = ball.w/3;
                     ball.h = ball.h/3;
-                }, 4000);
+                }, 6000);
             }
+
+            //Make the bar bigger
+            if(obj.kind === 1){
+                bar.w = bar.w*2;
+                bar.x = bar.x + bar.w/2;
+                setTimeout(function(){
+                    bar.w = bar.w/2;
+                    bar.x = bar.x + bar.w;
+                }, 6000);
+            }
+
+
+
+
+
+
             pArray[pArray.indexOf(obj)] = 0;
         }
 }

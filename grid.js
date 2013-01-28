@@ -43,7 +43,7 @@ var grid = function(){
         var x = Math.floor(Math.random() * exports.rowNums);
         var y = Math.floor(Math.random() * exports.colNums);
         var rand = arr[x][y];
-        arr[x][y] = new box(rand.x, rand.y, new powerup(rand.x, rand.y, exports.blockWidth, exports.blockHeight));
+        arr[x][y] = new box(rand.x, rand.y, new powerup(rand.x, rand.y, exports.blockWidth, exports.blockHeight, Math.floor((Math.random()*2))));
     }
 
     exports.blocks = arr;
