@@ -191,9 +191,13 @@ function draw(keyCode) {
 	                    window.ctx.drawImage(image, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
 	                    window.ctx.globalAlpha = 1;
 	                    }
-
+	                    var image = new Image();
+	                    image.src = "assets/brokenBox.png";
 	                if(!!grid.blocks[j][i])
-	                    window.ctx.drawImage(grid.blocks[j][i].boxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+	                	if(typeof(grid.blocks[j][i].p) === 'object')
+	                    	window.ctx.drawImage(image, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+	                    else
+		                    window.ctx.drawImage(grid.blocks[j][i].boxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
 				}
 			}
 
