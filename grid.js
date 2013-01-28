@@ -20,7 +20,18 @@ var grid = function(){
     }
 
     exports.blocks = arr;
+    
+    //integer array representing transparency of broken block images
+    var arr2 = Array(exports.rowNums);
 
+    for(var y = 0; y < exports.rowNums; y++) {
+        arr2[y] = Array(exports.colNums);
+        for(var x = 0; x<exports.colNums; x++) {
+            arr2[y][x] = 0;
+        }
+    }
+
+    exports.brokenBlocks = arr2;
 
 	//The coordinates of the grid
 	exports.xcoord = 100 - (exports.colNums*exports.buffer)/2;
@@ -67,44 +78,42 @@ var grid = function(){
         //[top left, top right, bottom right, bottom left]
         var bounceDirection = [false,false,false,false];
 
-        var remove = false;
         var removeList = [];
 
         //Check all four corners
         if(grid.inGrid(ball.x, ball.y)){
-            remove = true;
             removeList.push(getBrickRow(ball.x, ball.y));
             removeList.push(getBrickCol(ball.x, ball.y));
             bounceDirection[0] = breakBlockByCorner(ball, ball.x, ball.y);
         }
 
         if(grid.inGrid(ball.x+ball.w, ball.y)){
-            remove = true;
             removeList.push(getBrickRow(ball.x+ball.w, ball.y));
             removeList.push(getBrickCol(ball.x+ball.w, ball.y));
             bounceDirection[1] = breakBlockByCorner(ball, ball.x+ball.w, ball.y);
         }
 
         if(grid.inGrid(ball.x+ball.w, ball.y+ball.h)){
-            remove = true;
             removeList.push(getBrickRow(ball.x+ball.w, ball.y+ball.h));
             removeList.push(getBrickCol(ball.x+ball.w, ball.y+ball.h));
             bounceDirection[2] = breakBlockByCorner(ball, ball.x+ball.w, ball.y+ball.h);
         }
 
         if(grid.inGrid(ball.x, ball.y+ball.h)){
-            remove = true;
             removeList.push(getBrickRow(ball.x, ball.y+ball.h));
             removeList.push(getBrickCol(ball.x, ball.y+ball.h));
             bounceDirection[3] = breakBlockByCorner(ball, ball.x, ball.y+ball.h);
         }
         
         //if there is a block there remove it
-        if(remove)
-            for(var i = 0; i<removeList.length; i+=2)
-                exports.blocks[+removeList[i]][+removeList[i+1]] = false;
+        if(bounceDirection[0] || bounceDirection[1] || bounceDirection[2] || bounceDirection[3])
+            for(var i = 0; i<removeList.length; i+=2){
+                if(exports.blocks[removeList[i]][removeList[i+1]]) {
+                    exports.brokenBlocks[removeList[i]][removeList[i+1]] = 100;
+                    exports.blocks[removeList[i]][removeList[i+1]] = false;
+                } 
+            }           
 
-           
         return bounceDirection;
             
     }

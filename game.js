@@ -93,9 +93,6 @@ function draw(keyCode) {
 		//Iterate through the grid and draw boxes in each slot
 		for(i = 0; i < grid.colNums; i++){
 			for(j = 0; j < grid.rowNums; j++){
-                
-                if(!grid.blocks[j][i])
-                    continue;
 
 				//width of the box
 				var w = grid.blockWidth;
@@ -110,7 +107,15 @@ function draw(keyCode) {
 				//y coordinate of the box
 				var ycoord = (grid.ycoord + grid.blockHeight*j);
 
-				window.ctx.drawImage(box.image, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+				if(grid.brokenBlocks[j][i] > 0){
+				    window.ctx.globalAlpha = grid.brokenBlocks[j][i]/100;
+                    grid.brokenBlocks[j][i]-= 2;
+                    window.ctx.drawImage(box.brokenBoxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+                    window.ctx.globalAlpha = 1;
+                    }
+
+                if(!!grid.blocks[j][i])
+                    window.ctx.drawImage(box.boxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
 			}
 		}
 	}

@@ -25,8 +25,13 @@ var bar = function(){
 var box = function(){
 	var exports = {};
 
-	exports.image = new Image();
-	exports.image.src = "assets/box.png";
+
+	exports.boxImage = new Image();
+	exports.boxImage.src = "assets/box.png";
+	
+    exports.brokenBoxImage = new Image();
+	exports.brokenBoxImage.src = "assets/brokenBox.png";
+
 	exports.powerup = -1;
 
 	return exports;
@@ -74,8 +79,3 @@ var powerup = function(){
 
 	return exports;
 }();
-
-
-
-
-
