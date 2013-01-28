@@ -22,20 +22,15 @@ var bar = function(){
 }();
 
 //The box object
-var box = function(){
-	var exports = {};
+function box(x, y){
 
+	this.x = x;
+	this.y = y;
+	this.boxImage = new Image();
+	this.boxImage.src = "assets/box.png";
 
-	exports.boxImage = new Image();
-	exports.boxImage.src = "assets/box.png";
-	
-    exports.brokenBoxImage = new Image();
-	exports.brokenBoxImage.src = "assets/brokenBox.png";
-
-	exports.powerup = -1;
-
-	return exports;
-}();
+	this.powerup = 0;
+};
 
 //The ball object
 var ball = function(){

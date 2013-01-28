@@ -10,12 +10,31 @@ var grid = function(){
 	exports.rowNums = 3;
 	exports.colNums = 7;
     
+
+    //The coordinates of the grid
+    exports.xcoord = 100 - (exports.colNums*exports.buffer)/2;
+    exports.ycoord = 100 - (exports.rowNums*exports.buffer)/2;;
+
+    //The width and height of the grid
+    exports.w = window.canvas.width - exports.xcoord*2;
+    //TODO Remove fixed number, find appropriate ratio
+    exports.h = window.canvas.height*.6 - exports.ycoord*2;
+
+    //The width and height of each slot
+    exports.blockWidth = exports.w/exports.colNums;
+    exports.blockHeight = exports.h/exports.rowNums;
+
+
     var arr = Array(exports.rowNums);
+
 
     for(var y = 0; y < exports.rowNums; y++) {
         arr[y] = Array(exports.colNums);
         for(var x = 0; x<exports.colNums; x++) {
-            arr[y][x] = box;
+            var xcoord = exports.xcoord + exports.blockHeight*x;
+            var ycoord = exports.ycoord + exports.blockHeight*y;
+            var b = new box(xcoord, ycoord);
+            arr[y][x] = b;
         }
     }
 
@@ -32,19 +51,6 @@ var grid = function(){
     }
 
     exports.brokenBlocks = arr2;
-
-	//The coordinates of the grid
-	exports.xcoord = 100 - (exports.colNums*exports.buffer)/2;
-	exports.ycoord = 100 - (exports.rowNums*exports.buffer)/2;;
-
-	//The width and height of the grid
-	exports.w = window.canvas.width - exports.xcoord*2;
-	//TODO Remove fixed number, find appropriate ratio
-	exports.h = window.canvas.height*.6 - exports.ycoord*2;
-
-	//The width and height of each slot
-	exports.blockWidth = exports.w/exports.colNums;
-	exports.blockHeight = exports.h/exports.rowNums;
 
     exports.inGrid = function(x, y){
         return (x > exports.xcoord && x < exports.xcoord + exports.w) &&
@@ -110,6 +116,8 @@ var grid = function(){
             for(var i = 0; i<removeList.length; i+=2){
                 if(exports.blocks[removeList[i]][removeList[i+1]]) {
                     exports.brokenBlocks[removeList[i]][removeList[i+1]] = 100;
+
+                    //Call the checkPowerup function to activate potential powerups
                     exports.blocks[removeList[i]][removeList[i+1]] = false;
                 } 
             }           

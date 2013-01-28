@@ -107,10 +107,14 @@ function draw(keyCode) {
 				//y coordinate of the box
 				var ycoord = (grid.ycoord + grid.blockHeight*j);
 
+				//Create a local variable to store the brokenBox image, as the reference to the box is gone
+				var image = new Image();
+				image.src = "assets/brokenBox.png";
+
 				if(grid.brokenBlocks[j][i] > 0){
 				    window.ctx.globalAlpha = grid.brokenBlocks[j][i]/100;
                     grid.brokenBlocks[j][i]-= 2;
-                    window.ctx.drawImage(box.brokenBoxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+                    window.ctx.drawImage(image, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
                     window.ctx.globalAlpha = 1;
                     }
 

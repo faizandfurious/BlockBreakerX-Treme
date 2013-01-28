@@ -80,3 +80,24 @@ function checkBarHit() {
             ball.yVelocity = -1*Math.abs(ball.yVelocity);
         }
 }
+
+//This function is used to check to see if a powerup should be initiated
+function checkPowerup(obj){
+    if(obj.powerup >= 0){
+        console.log(obj.x + " " + obj.y);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
