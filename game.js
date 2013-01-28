@@ -8,6 +8,8 @@ window.speed = 1;
 window.stop = false;
 window.lives = 5;
 window.win = false;
+window.powering = false;
+window.p = new powerup();
 
 window.onload = function(){
 	setInterval(function(){
@@ -54,6 +56,21 @@ function winGame(){
 
 }
 
+function dropPowerup(){
+	powering = true;
+	drawPowerup(p);
+}
+
+function drawPowerup(p){
+	if(p.y < canvas.height){
+		p.y++;
+		window.ctx.drawImage(p.image, p.x, p.y, p.w, p.h);
+	}
+	else{
+		powering = false;
+	}
+}
+
 
 function drawBall(){
 	if(!stop){
@@ -81,6 +98,9 @@ function draw(keyCode) {
 	if(!stop){
 		//Clears the entire canvas
 		window.ctx.clearRect(0, 0, canvas.width, canvas.height);
+		if(powering){
+			drawPowerup(p);
+		}
 
 		//Draws the bar
 		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);

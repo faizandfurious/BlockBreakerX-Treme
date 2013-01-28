@@ -6,7 +6,6 @@ function checkBounds(){
         ball.yVelocity = -1 * ball.yVelocity;
     if(ball.x < 0 || ball.x+ball.h > canvas.width)
         ball.xVelocity = -1 * ball.xVelocity;
-
 }
 
 //This function is used to determine if the ball has hit a box
@@ -84,7 +83,7 @@ function checkBarHit() {
 //This function is used to check to see if a powerup should be initiated
 function checkPowerup(obj){
     if(obj.powerup >= 0){
-        console.log(obj.x + " " + obj.y);
+        dropPowerup(obj.powerup);
     }
 }
 

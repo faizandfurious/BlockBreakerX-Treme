@@ -118,6 +118,7 @@ var grid = function(){
                     exports.brokenBlocks[removeList[i]][removeList[i+1]] = 100;
 
                     //Call the checkPowerup function to activate potential powerups
+                    checkPowerup(exports.blocks[removeList[i]][removeList[i+1]]);
                     exports.blocks[removeList[i]][removeList[i+1]] = false;
                 } 
             }           

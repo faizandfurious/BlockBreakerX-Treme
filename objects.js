@@ -61,16 +61,14 @@ var ball = function(){
 	return exports;
 }();
 
-var powerup = function(){
-	var exports = {};
-	exports.type = "";
+function powerup(){
+	this.type = "";
 
-	exports.x = 0;
-	exports.y = 0;
-	exports.w = 50;
-	exports.h = 50;
-	exports.image = new Image();
-	exports.image.src = "assets/box.png";
+	this.x = 0;
+	this.y = 0;
+	this.w = 50;
+	this.h = 50;
+	this.image = new Image();
+	this.image.src = "assets/box.png";
 
-	return exports;
-}();
+};
