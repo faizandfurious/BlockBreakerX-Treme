@@ -50,13 +50,19 @@ function onMouseDown(event) {
     var widthStart = window.ctx.measureText(startString).width;
     if(menu){
         if (x>startButtonX && x<startButtonX+widthStart && y>buttonY && y< buttonY+buttonHeight) {
-        moveBackground(3);
-        level = 1;
+            moveBackground(3);
+            level = 1;
         }
-    else if (x>instructionButtonX && x<instructionButtonX+widthInstructions && y>buttonY && y< buttonY+buttonHeight) {
-        moveBackground(2);
-        level = -1;
-        };
+        else if (x>instructionButtonX && x<instructionButtonX+widthInstructions && y>buttonY && y< buttonY+buttonHeight) {
+            moveBackground(3);
+            level = -1;
+        }
+    }
+    else if(instruction){
+        if (x>instructionStartButtonX && x<instructionStartButtonX+widthStart && y>buttonY && y< buttonY+buttonHeight) {
+            moveBackground(3);
+            level = 1;
+    }
     }
 
 

@@ -16,11 +16,13 @@ instructions = "Instructions";
 level = 0;
 buttonPadding = 30;
 startButtonX = 135;
+instructionStartButtonX = 285;
 instructionButtonX = 285;
 buttonY = 415;
 borderRadius = 10;
 buttonHeight = 45;
-menu = true;
+menu = false;
+instruction = false;
 
 //life 
 lives = 3;
@@ -126,6 +128,8 @@ function draw(keyCode) {
 		background.sHeight,background.dx, background.dy, 600,600);
 		window.ctx.font="30px Consolas";
 		if(level===0){
+			menu = true;
+			instruction = false;
 			var widthInstructions = window.ctx.measureText(instructions).width;
 			var widthStart = window.ctx.measureText(startString).width;
 
@@ -136,17 +140,25 @@ function draw(keyCode) {
 			window.ctx.fillText(instructions, 300, 450);
 		}
 		else if (level === -1){
+			menu = false;
+			instruction = true;
 			window.ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
 
 			window.ctx.fillRect(50,50,500,500);
 			window.ctx.fillStyle = "rgb(100, 100, 100)";
 			window.ctx.fillText("Instructions", 100, 100);
+			var widthInstructions = window.ctx.measureText(instructions).width;
+			var widthStart = window.ctx.measureText(startString).width;
 
-			//TO DO: Add button to start game!
+			window.ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
+			roundedRect(instructionStartButtonX,buttonY,widthStart+buttonPadding,buttonHeight,borderRadius);
+			window.ctx.fillText(startString, instructionStartButtonX + 15, 450);
 
 
 		}
 		else{		
+			menu = false;
+			instruction = false;
 			drawPowerups();
 			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 			window.ctx.fillRect(0,0,600,40);
