@@ -38,6 +38,12 @@ var grid = function(){
         }
     }
 
+    //Randomly add powerups to boxes
+    for(var i = 0; i < 5; i++){
+        var rand = arr[Math.floor(Math.random() * exports.rowNums)][Math.floor(Math.random() * exports.colNums)];
+        arr[Math.floor(Math.random() * exports.rowNums)][Math.floor(Math.random() * exports.colNums)] = new box(rand.x, rand.y, 0);
+    }
+    console.log(arr);
     exports.blocks = arr;
     
     //integer array representing transparency of broken block images

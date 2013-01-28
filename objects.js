@@ -22,14 +22,15 @@ var bar = function(){
 }();
 
 //The box object
-function box(x, y){
-
+function box(x, y, p) {
+    if (p === undefined)
+        this.p = -1;
+    else
+    	this.p = p;
 	this.x = x;
 	this.y = y;
 	this.boxImage = new Image();
 	this.boxImage.src = "assets/box.png";
-
-	this.powerup = 0;
 };
 
 //The ball object
@@ -103,8 +104,11 @@ function roundedRect(x,y,width,height,radius){
     window.ctx.restore();
 }
 
+/**
+This object represents the powerup object model. It takes the coordinates of it's origin
+**/
 function powerup(x, y){
-	this.type = "";
+	this.type = 0;
 
 	this.x = x;
 	this.y = y;
