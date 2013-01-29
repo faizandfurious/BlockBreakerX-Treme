@@ -20,10 +20,15 @@ function drawInstructions(){
 
 //animates the move of the background to a different frame
 function moveBackground(frame){
-	setInterval(function(){
-		var targetHeight = 3600-(frame*600);
-		if (targetHeight!== background.sy){
-			background.sy = background.sy - 20;
-		}}, 5);
+	go = setInterval(function(){
+			var targetHeight = 3600-(frame*600);
+			if (targetHeight!== background.sy){
+				background.sy = background.sy - 20;
+			}}, 5);
+}
 
+//animates the move of the background to a different frame
+function resetBackground(){
+	clearInterval(go);
+	background.sy = 0;
 }

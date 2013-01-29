@@ -51,13 +51,9 @@ function endGame(){
 		draw();
 	}
 	else{
-		window.stop = true;
-		window.ctx.save();
-		window.ctx.fillStyle = '#f00';
-		window.ctx.font = 'italic bold 50px sans-serif';
-		window.ctx.textBaseline = 'bottom';
-		window.ctx.fillText('YOU LOSE!', 100, 350);
-		window.ctx.restore();
+		menu = true;
+		level = 0;
+		resetBackground();
 	}
 }
 
@@ -65,7 +61,8 @@ function winGame(){
 		window.stop = true;
 		window.ctx.save();
 		window.ctx.fillStyle = '#f00';
-		window.ctx.font = 'italic bold 50px sans-serif';
+		window.
+		window.ctx.font = 'italic bold 50px Consolas';
 		window.ctx.textBaseline = 'bottom';
 		window.ctx.fillText('YOU WIN!', 100, 350);
 		window.ctx.restore();
@@ -127,22 +124,24 @@ function draw(keyCode) {
 		window.ctx.drawImage(background.image,background.sx,background.sy,background.sWidth,
 		background.sHeight,background.dx, background.dy, 600,600);
 		window.ctx.font="30px Consolas";
-		if(level===0){
+		//Menu
+		if(level === 0){
 			menu = true;
 			instruction = false;
 			var widthInstructions = window.ctx.measureText(instructions).width;
 			var widthStart = window.ctx.measureText(startString).width;
 
-			window.ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
+			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 			roundedRect(startButtonX,buttonY,widthStart+buttonPadding,buttonHeight,borderRadius);
 			window.ctx.fillText(startString, 150, 450);
 			roundedRect(instructionButtonX,buttonY,widthInstructions+buttonPadding,buttonHeight, borderRadius);
 			window.ctx.fillText(instructions, 300, 450);
 		}
+		//Instructions
 		else if (level === -1){
 			menu = false;
 			instruction = true;
-			window.ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
+			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 
 			window.ctx.fillRect(50,50,500,500);
 			window.ctx.fillStyle = "rgb(100, 100, 100)";
@@ -150,13 +149,14 @@ function draw(keyCode) {
 			var widthInstructions = window.ctx.measureText(instructions).width;
 			var widthStart = window.ctx.measureText(startString).width;
 
-			window.ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
+			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 			roundedRect(instructionStartButtonX,buttonY,widthStart+buttonPadding,buttonHeight,borderRadius);
 			window.ctx.fillText(startString, instructionStartButtonX + 15, 450);
 
 
 		}
-		else{		
+		//Top Info Bar
+		else{
 			menu = false;
 			instruction = false;
 			drawPowerups();
@@ -169,11 +169,11 @@ function draw(keyCode) {
 			if(lives > 3){
 				window.ctx.drawImage(life.image, lifeX, 8, 35, 30);
 				window.ctx.save();
-				window.ctx.font="20px Verdana";
+				window.ctx.font="20px Consolas";
 				window.ctx.fillText("x" + lives, lifeX + 35, 30);
 				window.ctx.restore();
-
 			}
+			
 			else{
 				for(var i=0 ; i < lives ; i++){
 					window.ctx.drawImage(life.image,lifeX, 8,35, 30);

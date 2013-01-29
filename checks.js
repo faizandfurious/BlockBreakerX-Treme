@@ -97,7 +97,7 @@ function checkPowerup(obj){
 }
 
 function checkPowerupHitBar(obj){
-    if(obj.y + obj.h > bar.ycoord && obj.y < bar.ycoord + bar.h/2)
+    if(obj.y + obj.h > bar.ycoord && obj.y < bar.ycoord + bar.h/2){
         if(obj.x + obj.w > bar.xcoord && obj.x < bar.xcoord + bar.w){
             //Make the ball bigger
             if(obj.kind === 0){
@@ -129,6 +129,7 @@ function checkPowerupHitBar(obj){
 
             pArray[pArray.indexOf(obj)] = 0;
         }
+    }
 }
 
 

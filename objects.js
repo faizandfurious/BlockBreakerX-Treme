@@ -100,7 +100,7 @@ function roundedRect(x,y,width,height,radius){
     window.ctx.stroke();
     window.ctx.save();
     window.ctx.globalAlpha = 0.5;
-	window.ctx.fillStyle = 'green';
+	window.ctx.fillStyle = "rgba(60, 70, 39, 1)";
     window.ctx.fill();
     window.ctx.restore();
 }
