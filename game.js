@@ -23,9 +23,10 @@ borderRadius = 10;
 buttonHeight = 45;
 menu = false;
 instruction = false;
+playable = false;
 
 //life 
-lives = 5;
+lives = 3;
 
 window.onload = function(){
 	setInterval(function(){
@@ -54,6 +55,8 @@ function endGame(){
 		menu = true;
 		level = 0;
 		resetBackground();
+		lives = 3;
+		playable = false;
 	}
 }
 
@@ -173,7 +176,7 @@ function draw(keyCode) {
 				window.ctx.fillText("x" + lives, lifeX + 35, 30);
 				window.ctx.restore();
 			}
-			
+
 			else{
 				for(var i=0 ; i < lives ; i++){
 					window.ctx.drawImage(life.image,lifeX, 8,35, 30);
