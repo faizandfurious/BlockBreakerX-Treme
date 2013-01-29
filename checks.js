@@ -2,10 +2,19 @@
 function checkBounds(){
     if(ball.y+ball.h > canvas.height)
         endGame();
-    if(ball.y < 0)
+    if(ball.y < 0){
+        ball.y = 1;
         ball.yVelocity = -1 * ball.yVelocity;
-    if(ball.x < 0 || ball.x+ball.h > canvas.width)
+    }
+    if(ball.x < 0 || ball.x + ball.h > canvas.width){
+        if(ball.x < 0){
+            ball.x = 1;
+        }
+        else{
+            ball.x = ball.x - 1;
+        }
         ball.xVelocity = -1 * ball.xVelocity;
+    }
 }
 
 //This function is used to determine if the ball has hit a box
@@ -115,11 +124,6 @@ function checkPowerupHitBar(obj){
                     bar.x = bar.x + bar.w;
                 }, 6000);
             }
-
-
-
-
-
 
             pArray[pArray.indexOf(obj)] = 0;
         }
