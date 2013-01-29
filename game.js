@@ -1,36 +1,8 @@
-//Globar variables
-//canvas element
-window.canvas = document.getElementById("myCanvas");
-//context element
-window.ctx = canvas.getContext("2d");
-//Bar speed multiplier
-window.speed = 1;
-window.stop = false;
-window.win = false;
-window.powering = false;
-window.pArray = new Array(5);
 
-//Initial board size
-gridBoard = new grid(3, 7);
-largeBar = false;
-startString = "Start";
-instructions = "Instructions";
-level = 0;
-buttonPadding = 30;
-startButtonX = 135;
-instructionStartButtonX = 285;
-instructionButtonX = 285;
-buttonY = 415;
-borderRadius = 10;
-buttonHeight = 45;
-menu = false;
-instruction = false;
-playable = false;
-
-//life 
-lives = 3;
 
 window.onload = function(){
+	//When the window loads, create a new gridBoard with the specified rows, columns
+	gridBoard = new grid(3,7);
 	setInterval(function(){
 		if(!window.stop){
         moveBar();
@@ -63,25 +35,31 @@ function endGame(){
 }
 
 function winGame(){
-		window.stop = true;
-		window.ctx.save();
-		window.ctx.fillStyle = '#f00';
-		window.
-		window.ctx.font = 'italic bold 50px Consolas';
-		window.ctx.textBaseline = 'bottom';
-		window.ctx.fillText('YOU WIN!', 100, 350);
-		window.ctx.restore();
+		if(level === 1){
+			ball.state = 0;
+			changeLevel(2);
+		}
+		else if(level === 2){
+			window.stop = true;
+			window.ctx.save();
+			window.ctx.fillStyle = '#f00';
+			window.
+			window.ctx.font = 'italic bold 50px Consolas';
+			window.ctx.textBaseline = 'bottom';
+			window.ctx.fillText('YOU WIN!', 100, 350);
+			window.ctx.restore();
+		}
 
 }
 
-function changeLevel(level){
-	resetBoard();
+function changeLevel(lvl){
+	level = lvl;
+	if(level === 2){
+		lives++;
+		gridBoard = new grid(4, 9);
+	}
 }
 
-function resetBoard(){
-	lives = 5;
-	gridBoard = new grid(2, 2);
-}
 
 function dropPowerup(pp){
 	if(pp.y < canvas.height){

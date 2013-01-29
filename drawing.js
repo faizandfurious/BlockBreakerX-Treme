@@ -69,9 +69,10 @@ function draw(keyCode) {
 			window.ctx.translate(instructionStartButtonX + 15, 450);
 			window.ctx.fillText(startString, 0,0);
 			window.ctx.restore();
-
-
 		}
+
+
+
 		//Top Info Bar
 		else{
 			menu = false;
