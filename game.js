@@ -145,16 +145,26 @@ function draw(keyCode) {
 			menu = false;
 			instruction = true;
 			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
-
 			window.ctx.fillRect(50,50,500,500);
 			window.ctx.fillStyle = "rgb(100, 100, 100)";
 			window.ctx.fillText("Instructions", 100, 100);
-			var widthInstructions = window.ctx.measureText(instructions).width;
 			var widthStart = window.ctx.measureText(startString).width;
-
 			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 			roundedRect(instructionStartButtonX,buttonY,widthStart+buttonPadding,buttonHeight,borderRadius);
 			window.ctx.fillText(startString, instructionStartButtonX + 15, 450);
+			window.ctx.fillStyle = "rgb(100, 100, 100)";
+			window.ctx.font="12px Consolas";
+			window.ctx.fillText("Hit space to bar to send the ball into the air.",100,150);
+			window.ctx.fillText("Use arrow keys to move bar.",100,165);
+			window.ctx.fillText("Collect powerups to help you!",100,180);
+			window.ctx.font="24px Consolas";
+
+			window.ctx.fillText("Destroy all the blocks to win!",100,225);
+
+
+
+
+
 
 
 		}
