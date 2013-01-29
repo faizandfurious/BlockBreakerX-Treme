@@ -25,7 +25,7 @@ menu = false;
 instruction = false;
 
 //life 
-lives = 3;
+lives = 5;
 
 window.onload = function(){
 	setInterval(function(){
@@ -166,9 +166,19 @@ function draw(keyCode) {
 			window.ctx.fillText("Level: "+level, 10, 28);
 			var lifeX = 480;
 			//loops to draw the various lives
-			for(var i=0 ; i < lives ; i++){
-				window.ctx.drawImage(life.image,lifeX, 8,35, 30);
-				lifeX = lifeX+35;
+			if(lives > 3){
+				window.ctx.drawImage(life.image, lifeX, 8, 35, 30);
+				window.ctx.save();
+				window.ctx.font="20px Verdana";
+				window.ctx.fillText("x" + lives, lifeX + 35, 30);
+				window.ctx.restore();
+
+			}
+			else{
+				for(var i=0 ; i < lives ; i++){
+					window.ctx.drawImage(life.image,lifeX, 8,35, 30);
+					lifeX = lifeX+35;
+				}
 			}
 
 			//Draws the bar

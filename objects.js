@@ -31,6 +31,7 @@ function box(x, y, p) {
 	this.y = y;
 	this.boxImage = new Image();
 	this.boxImage.src = "assets/box.png";
+	
 };
 
 //The ball object
@@ -112,12 +113,16 @@ function powerup(x, y, w, h, kind){
         this.kind = 0;
     else
     	this.kind = kind;
-
 	this.x = x;
 	this.y = y;
 	this.w = w;
 	this.h = h;
 	this.image = new Image();
-	this.image.src = "assets/box.png";
+	if(this.kind === 2){
+		this.image.src = "assets/powerup-02.png";
+	}
+	else{
+		this.image.src = "assets/box.png";
+	}
 
 };
