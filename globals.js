@@ -25,6 +25,7 @@ buttonHeight = 45;
 menu = false;
 instruction = false;
 playable = false;
+topOffset = 40;
 
 //life 
 lives = 3;

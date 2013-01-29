@@ -2,8 +2,8 @@
 function checkBounds(){
     if(ball.y+ball.h > canvas.height)
         endGame();
-    if(ball.y < 0){
-        ball.y = 1;
+    if(ball.y < topOffset){
+        ball.y = topOffset+1;
         ball.yVelocity = -1 * ball.yVelocity;
     }
     if(ball.x < 0 || ball.x + ball.h > canvas.width){

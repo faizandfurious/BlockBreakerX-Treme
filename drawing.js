@@ -121,7 +121,7 @@ function draw(keyCode) {
 		instruction = false;
 		drawPowerups();
 		window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
-		window.ctx.fillRect(0,0,600,40);
+		window.ctx.fillRect(0,0,600,topOffset);
 		window.ctx.fillStyle = "rgb(100, 100, 100)";
 		window.ctx.fillText("Level: "+level, 10, 28);
 		var lifeX = 480;
