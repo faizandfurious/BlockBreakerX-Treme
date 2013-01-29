@@ -143,3 +143,37 @@ function draw(keyCode) {
 		}
 	}
 }
+
+function moveBar()
+{
+    var friction = 0;
+    var vnew = bar.velocity + bar.acceleration;
+    if(vnew <= bar.vMax && vnew >= bar.vMin)
+        bar.velocity = vnew;
+
+    if(bar.acceleration === 0){
+        if(bar.velocity > 0)
+            friction = -.5;
+        else if(bar.velocity < 0)
+            friction = .5;
+    }
+
+    bar.velocity+=friction;
+    
+    var xNew = bar.xcoord + bar.velocity;
+    if(xNew < 0){
+        xNew = 0;
+        bar.dLock = 0;
+        bar.velocity = 0;
+        bar.acceleration = 0;
+    }
+    else if(xNew+bar.w > canvas.width){
+         xNew = canvas.width - bar.w;
+        bar.dLock = 0;
+        bar.velocity = 0;
+        bar.acceleration = 0;
+    }
+    bar.xcoord = xNew;
+
+
+}

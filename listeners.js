@@ -18,6 +18,11 @@ function onKeyUp(event) {
     }
 }
 
+/**
+* New Event listener function that listens for keydown manually on given time interval
+* for a smoother bar motion
+*/
+
 function onKeyDown(event) {
     if(playable){
         //Left arrow key
