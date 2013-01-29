@@ -118,11 +118,6 @@ function powerup(x, y, w, h, kind){
 	this.w = w;
 	this.h = h;
 	this.image = new Image();
-	if(this.kind === 2){
-		this.image.src = "assets/powerup-02.png";
-	}
-	else{
-		this.image.src = "assets/box.png";
-	}
+	this.image.src = "assets/powerup.png";
 
 };
