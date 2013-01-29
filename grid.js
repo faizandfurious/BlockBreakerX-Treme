@@ -1,14 +1,14 @@
 //Creating the grid to place boxes into. The grid is represented by a 2x2 array that holds boolean values to 
 //determine if a box is there or not
-function grid(){
+function grid(row, col){
 	var exports = {};
 
 	//Leave space between each block
 	exports.buffer = 2;
 
 	//The number of rows and columns
-	exports.rowNums = 3;
-	exports.colNums = 7;
+	exports.rowNums = row;
+	exports.colNums = col;
     
 
     //The coordinates of the grid
