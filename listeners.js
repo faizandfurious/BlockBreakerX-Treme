@@ -56,25 +56,24 @@ function onMouseDown(event) {
         var widthStart = window.ctx.measureText(startString).width;
         if(menu){
             if (x>startButtonX && x<startButtonX+widthStart && y>buttonY && y< buttonY+buttonHeight) {
-                moveBackground(3);
-                level = 1;
+                initializeBoard();
+                changeLevel(1);
                 playable = true;
             }
             else if (x>instructionButtonX && x<instructionButtonX+widthInstructions && y>buttonY && y< buttonY+buttonHeight) {
-                moveBackground(3);
-                level = -1;
+                changeLevel(-1);
             }
         }
-        else if(instruction){
+        else if(level === -1){
             if (x>instructionStartButtonX && x<instructionStartButtonX+widthStart && y>buttonY && y< buttonY+buttonHeight) {
-                moveBackground(3);
-                level = 1;
+                changeLevel(1);
                 playable = true;
+                initializeBoard();
         }
         else if(restartable){
             if (x>instructionStartButtonX && x<instructionStartButtonX+widthStart && y>buttonY && y< buttonY+buttonHeight) {
-                moveBackground(3);
-                level = 1;
+                changeLevel(1);
+                initializeBoard();
             }
         }
     }
