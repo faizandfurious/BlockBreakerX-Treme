@@ -20,7 +20,7 @@ function checkBounds(){
 //This function is used to determine if the ball has hit a box
 function checkBallHit(){
     
-    var bounceDirection = grid.breakBlock(ball);
+    var bounceDirection = gridBoard.breakBlock(ball);
 
     //construct binary representation of direction for switch statement 
     var binaryDirection = 0;

@@ -10,6 +10,7 @@ window.win = false;
 window.powering = false;
 window.pArray = new Array(5);
 
+gridBoard = new grid();
 largeBar = false;
 startString = "Start";
 instructions = "Instructions";
@@ -72,6 +73,11 @@ function winGame(){
 
 }
 
+function resetBoard(){
+	lives = 3;
+
+}
+
 function dropPowerup(pp){
 	if(pp.y < canvas.height){
 		powering = true;
@@ -116,7 +122,7 @@ function drawBall(){
 }
 
 function draw(keyCode) {
-	if(grid.count() === 0){
+	if(gridBoard.count() === 0){
 		winGame();
 	}
 
@@ -145,26 +151,19 @@ function draw(keyCode) {
 			menu = false;
 			instruction = true;
 			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
+
 			window.ctx.fillRect(50,50,500,500);
 			window.ctx.fillStyle = "rgb(100, 100, 100)";
 			window.ctx.fillText("Instructions", 100, 100);
+			var widthInstructions = window.ctx.measureText(instructions).width;
 			var widthStart = window.ctx.measureText(startString).width;
+
 			window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 			roundedRect(instructionStartButtonX,buttonY,widthStart+buttonPadding,buttonHeight,borderRadius);
-			window.ctx.fillText(startString, instructionStartButtonX + 15, 450);
-			window.ctx.fillStyle = "rgb(100, 100, 100)";
-			window.ctx.font="12px Consolas";
-			window.ctx.fillText("Hit space to bar to send the ball into the air.",100,150);
-			window.ctx.fillText("Use arrow keys to move bar.",100,165);
-			window.ctx.fillText("Collect powerups to help you!",100,180);
-			window.ctx.font="24px Consolas";
-
-			window.ctx.fillText("Destroy all the blocks to win!",100,225);
-
-
-
-
-
+			window.ctx.save();
+			window.ctx.translate(instructionStartButtonX + 15, 450);
+			window.ctx.fillText(startString, 0,0);
+			window.ctx.restore();
 
 
 		}
@@ -200,39 +199,39 @@ function draw(keyCode) {
 			drawBall();
 
 			//Iterate through the grid and draw boxes in each slot
-			for(i = 0; i < grid.colNums; i++){
-				for(j = 0; j < grid.rowNums; j++){
+			for(i = 0; i < gridBoard.colNums; i++){
+				for(j = 0; j < gridBoard.rowNums; j++){
 
 					//width of the box
-					var w = grid.blockWidth;
+					var w = gridBoard.blockWidth;
 
 					//Height of the box
-					var h = grid.blockHeight;
+					var h = gridBoard.blockHeight;
 
 
 					//x coordinate of the box
-					var xcoord = (grid.xcoord + grid.blockWidth*i);
+					var xcoord = (gridBoard.xcoord + gridBoard.blockWidth*i);
 
 					//y coordinate of the box
-					var ycoord = (grid.ycoord + grid.blockHeight*j);
+					var ycoord = (gridBoard.ycoord + gridBoard.blockHeight*j);
 
 					//Create a local variable to store the brokenBox image, as the reference to the box is gone
 					var image = new Image();
 					image.src = "assets/brokenBox.png";
 
-					if(grid.brokenBlocks[j][i] > 0){
-					    window.ctx.globalAlpha = grid.brokenBlocks[j][i]/100;
-	                    grid.brokenBlocks[j][i]-= 2;
-	                    window.ctx.drawImage(image, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+					if(gridBoard.brokenBlocks[j][i] > 0){
+					    window.ctx.globalAlpha = gridBoard.brokenBlocks[j][i]/100;
+	                    gridBoard.brokenBlocks[j][i]-= 2;
+	                    window.ctx.drawImage(image, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
 	                    window.ctx.globalAlpha = 1;
 	                    }
 	                    var image = new Image();
 	                    image.src = "assets/brokenBox.png";
-	                if(!!grid.blocks[j][i])
-	                	if(typeof(grid.blocks[j][i].p) === 'object')
-	                    	window.ctx.drawImage(image, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+	                if(!!gridBoard.blocks[j][i])
+	                	if(typeof(gridBoard.blocks[j][i].p) === 'object')
+	                    	window.ctx.drawImage(image, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
 	                    else
-		                    window.ctx.drawImage(grid.blocks[j][i].boxImage, xcoord, ycoord, w - grid.buffer, h - grid.buffer);
+		                    window.ctx.drawImage(gridBoard.blocks[j][i].boxImage, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
 				}
 			}
 

@@ -1,6 +1,6 @@
 //Creating the grid to place boxes into. The grid is represented by a 2x2 array that holds boolean values to 
 //determine if a box is there or not
-var grid = function(){
+function grid(){
 	var exports = {};
 
 	//Leave space between each block
@@ -95,25 +95,25 @@ var grid = function(){
         var removeList = [];
 
         //Check all four corners
-        if(grid.inGrid(ball.x, ball.y)){
+        if(exports.inGrid(ball.x, ball.y)){
             removeList.push(getBrickRow(ball.x, ball.y));
             removeList.push(getBrickCol(ball.x, ball.y));
             bounceDirection[0] = breakBlockByCorner(ball, ball.x, ball.y);
         }
 
-        if(grid.inGrid(ball.x+ball.w, ball.y)){
+        if(exports.inGrid(ball.x+ball.w, ball.y)){
             removeList.push(getBrickRow(ball.x+ball.w, ball.y));
             removeList.push(getBrickCol(ball.x+ball.w, ball.y));
             bounceDirection[1] = breakBlockByCorner(ball, ball.x+ball.w, ball.y);
         }
 
-        if(grid.inGrid(ball.x+ball.w, ball.y+ball.h)){
+        if(exports.inGrid(ball.x+ball.w, ball.y+ball.h)){
             removeList.push(getBrickRow(ball.x+ball.w, ball.y+ball.h));
             removeList.push(getBrickCol(ball.x+ball.w, ball.y+ball.h));
             bounceDirection[2] = breakBlockByCorner(ball, ball.x+ball.w, ball.y+ball.h);
         }
 
-        if(grid.inGrid(ball.x, ball.y+ball.h)){
+        if(exports.inGrid(ball.x, ball.y+ball.h)){
             removeList.push(getBrickRow(ball.x, ball.y+ball.h));
             removeList.push(getBrickCol(ball.x, ball.y+ball.h));
             bounceDirection[3] = breakBlockByCorner(ball, ball.x, ball.y+ball.h);
@@ -152,4 +152,4 @@ var grid = function(){
 
 	return exports;
 
-}();
+};
