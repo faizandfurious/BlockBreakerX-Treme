@@ -23,14 +23,21 @@ var bar = function(){
 
 //The box object
 function box(x, y, p) {
-    if (p === undefined)
-        this.p = -1;
-    else
-    	this.p = p;
-	this.x = x;
-	this.y = y;
+	this.breakable = true;
 	this.boxImage = new Image();
 	this.boxImage.src = "assets/box.png";
+    if (p === undefined)
+        this.p = -1;
+    else{
+    	this.p = p;
+    	//If it's the 4th kind of powerup, the block becomes unbreakable
+    	if(this.p.kind === 3){
+    		this.breakable = false;
+    		this.boxImage.src = "assets/unbreakableBlock.png";
+    	}
+	}
+	this.x = x;
+	this.y = y;
 	
 };
 

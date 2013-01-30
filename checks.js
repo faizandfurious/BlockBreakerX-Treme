@@ -92,7 +92,10 @@ function checkBarHit() {
 //This function is used to check to see if a powerup should be initiated
 function checkPowerup(obj){
     if(typeof(obj.p) === 'object'){
-        dropPowerup(obj.p);
+        //Checks to ensure the powerup is not the unbreakable powerup
+        if(obj.p.kind !== 3){
+            dropPowerup(obj.p);
+        }
     }
 }
 

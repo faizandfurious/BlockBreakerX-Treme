@@ -39,11 +39,12 @@ function grid(row, col){
     }
 
     //Randomly add powerups to boxes
-    for(var i = 0; i < 5; i++){
+    var max = row*col/4;
+    for(var i = 0; i < max; i++){
         var x = Math.floor(Math.random() * exports.rowNums);
         var y = Math.floor(Math.random() * exports.colNums);
         var rand = arr[x][y];
-        arr[x][y] = new box(rand.x, rand.y, new powerup(rand.x, rand.y, exports.blockWidth, exports.blockHeight, Math.floor((Math.random()*3))));
+        arr[x][y] = new box(rand.x, rand.y, new powerup(rand.x, rand.y, exports.blockWidth, exports.blockHeight, Math.floor((Math.random()*4))));
     }
 
     exports.blocks = arr;
@@ -124,10 +125,11 @@ function grid(row, col){
             for(var i = 0; i<removeList.length; i+=2){
                 if(exports.blocks[removeList[i]][removeList[i+1]]) {
                     exports.brokenBlocks[removeList[i]][removeList[i+1]] = 100;
-                    console.log(exports.blocks[removeList[i]][removeList[i+1]]);
                     //Call the checkPowerup function to activate potential powerups
                     checkPowerup(exports.blocks[removeList[i]][removeList[i+1]]);
-                    exports.blocks[removeList[i]][removeList[i+1]] = false;
+                    if(exports.blocks[removeList[i]][removeList[i+1]].breakable){
+                        exports.blocks[removeList[i]][removeList[i+1]] = false;
+                    }
                 } 
             }           
 
@@ -139,10 +141,10 @@ function grid(row, col){
     exports.count = function(){
         var num = 0;
         for(var y = 0; y < exports.rowNums; y++) {
-            for(var x = 0; x<exports.colNums; x++) {
+            for(var x = 0; x < exports.colNums; x++) {
                 //Checks if there is a block at that position
-                if(exports.blocks[y][x]){
-                    ++num;
+                if(exports.blocks[y][x] && exports.blocks[y][x].breakable){
+                    num++;
                 }
             }
         }

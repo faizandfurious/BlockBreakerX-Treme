@@ -166,11 +166,15 @@ function draw(keyCode) {
                     window.ctx.drawImage(image, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
                     window.ctx.globalAlpha = 1;
                     }
-                    var image = new Image();
-                    image.src = "assets/brokenBox.png";
                 if(!!gridBoard.blocks[j][i])
                 	if(typeof(gridBoard.blocks[j][i].p) === 'object')
-                    	window.ctx.drawImage(image, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
+                		if(gridBoard.blocks[j][i].breakable){
+                    		window.ctx.drawImage(image, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
+                		}
+                    	else{
+                    		window.ctx.drawImage(gridBoard.blocks[j][i].boxImage, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
+                    	}
+
                     else
 	                    window.ctx.drawImage(gridBoard.blocks[j][i].boxImage, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
 			}
