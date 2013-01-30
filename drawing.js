@@ -26,6 +26,14 @@ function drawBall(){
 	}
 }
 
+function drawMessage(){
+
+    window.ctx.font = 'bold 50px Consolas';
+   		window.ctx.textBaseline = 'bottom';
+		window.ctx.fillStyle = "rgba(0, 220, 0, "+tempMessage.count/100+")";
+  		window.ctx.fillText(tempMessage.showText(), bar.xcoord, bar.ycoord-150+tempMessage.count);
+}
+
 function draw(keyCode) {
 	if(gridBoard.count() === 0){
 		progressGame();
@@ -79,7 +87,7 @@ function draw(keyCode) {
 		window.ctx.font = 'bold 50px Consolas';
    		window.ctx.textBaseline = 'bottom';
 		window.ctx.fillStyle = "rgb(100, 100, 100)";
-  		window.ctx.fillText("Game Over!", 200, 350);
+  		window.ctx.fillText("You Win!", 200, 350);
 		window.ctx.restore();
 
 		window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
@@ -144,7 +152,8 @@ function draw(keyCode) {
 		//Draws the bar
 		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
 
-		drawBall();
+		
+        
 
 		//Iterate through the grid and draw boxes in each slot
 		for(i = 0; i < gridBoard.colNums; i++){
@@ -172,17 +181,23 @@ function draw(keyCode) {
                     gridBoard.brokenBlocks[j][i]-= 2;
                     window.ctx.drawImage(image, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
                     window.ctx.globalAlpha = 1;
-                    }
-                    var image = new Image();
-                    image.src = "assets/brokenBox.png";
-                if(!!gridBoard.blocks[j][i])
+                }
+
+                var image = new Image();
+                image.src = "assets/brokenBox.png";
+                if(!!gridBoard.blocks[j][i]){
                 	if(typeof(gridBoard.blocks[j][i].p) === 'object')
                     	window.ctx.drawImage(image, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
                     else
 	                    window.ctx.drawImage(gridBoard.blocks[j][i].boxImage, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
+                }
 			}
-		}
 
+		}
+        
+        drawMessage();
+
+        drawBall();
 	}
 }
 
