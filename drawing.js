@@ -26,6 +26,14 @@ function drawBall(){
 	}
 }
 
+function drawMessage(){
+
+    window.ctx.font = 'bold 50px Consolas';
+   		window.ctx.textBaseline = 'bottom';
+		window.ctx.fillStyle = "rgba(0, 220, 0, "+tempMessage.count/100+")";
+  		window.ctx.fillText(tempMessage.showText(), 20, bar.ycoord-150+tempMessage.count);
+}
+
 function draw(keyCode) {
 	if(gridBoard.count() === 0){
 		progressGame();
@@ -76,7 +84,6 @@ function draw(keyCode) {
 	//The game is won
 	else if(level === 3){
 		menu = true;
-
 		window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 		window.ctx.drawImage(cloud.image,cloud.sx,cloud.winsy,cloud.sWidth,
 		cloud.sHeight,cloud.dx, cloud.dy, 425,306);
@@ -137,7 +144,8 @@ function draw(keyCode) {
 		//Draws the bar
 		window.ctx.drawImage(bar.image, bar.xcoord, bar.ycoord, bar.w, bar.h);
 
-		drawBall();
+		
+        
 
 		//Iterate through the grid and draw boxes in each slot
 		for(i = 0; i < gridBoard.colNums; i++){
@@ -165,8 +173,11 @@ function draw(keyCode) {
                     gridBoard.brokenBlocks[j][i]-= 2;
                     window.ctx.drawImage(image, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
                     window.ctx.globalAlpha = 1;
-                    }
-                if(!!gridBoard.blocks[j][i])
+                }
+
+                var image = new Image();
+                image.src = "assets/brokenBox.png";
+                if(!!gridBoard.blocks[j][i]){
                 	if(typeof(gridBoard.blocks[j][i].p) === 'object')
                 		if(gridBoard.blocks[j][i].breakable){
                     		window.ctx.drawImage(image, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
@@ -177,9 +188,14 @@ function draw(keyCode) {
 
                     else
 	                    window.ctx.drawImage(gridBoard.blocks[j][i].boxImage, xcoord, ycoord, w - gridBoard.buffer, h - gridBoard.buffer);
+                }
 			}
-		}
 
+		}
+        
+        drawMessage();
+
+        drawBall();
 	}
 }
 

@@ -104,6 +104,7 @@ function checkPowerupHitBar(obj){
         if(obj.x + obj.w > bar.xcoord && obj.x < bar.xcoord + bar.w){
             //Make the ball bigger
             if(obj.kind === 0){
+                tempMessage.create("Super-Sized Apple!");
                 ball.w = ball.w*1.5;
                 ball.h = ball.h*1.5;
                 ball.x = ball.x - ball.w/2;
@@ -118,6 +119,7 @@ function checkPowerupHitBar(obj){
 
             //Make the bar bigger
             if(obj.kind === 1){
+                tempMessage.create("Extended Log!");
                 bar.w = bar.w*1.5;
                 bar.x = bar.x + bar.w/2;
                 setTimeout(function(){
@@ -127,6 +129,7 @@ function checkPowerupHitBar(obj){
             }
             //Add one to the lives
             if(obj.kind === 2){
+                tempMessage.create("Extra Life!");
                 lives++;
             }
 

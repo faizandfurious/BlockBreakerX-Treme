@@ -14,7 +14,7 @@ var bar = function(){
 	exports.xcoord = 300;
 	exports.ycoord = 530;
 	exports.w = 120;
-	exports.h = 15;
+	exports.h = 25;
 	exports.image.src = "assets/bar.png";
 
 	return exports;
@@ -41,6 +41,30 @@ function box(x, y, p) {
 	
 };
 
+var tempMessage = function(){
+    var exports = {};
+    
+    var message = "";
+
+    exports.count = 0;
+    
+    exports.create = function(x){
+        message = x;
+        exports.count = 100;
+    }
+
+
+    exports.showText = function(){
+        if(exports.count > 0){
+            exports.count -= 1;
+            return message;
+        }
+        return "";
+    }
+    
+    return exports;
+}();
+
 //The ball object
 var ball = function(){
 	var exports = {};
@@ -60,11 +84,6 @@ var ball = function(){
 	exports.image = new Image();
 	exports.image.src = "assets/ball.png";
 
-    //checks if ball is intersecting rectangular region (x1,y1) ,(x2,y2)
-    //if so, ball bounces and returns true, if not, returns false
-    exports.intersect = function(x1,y1,x2,y2) {
-        
-    }
 
 
 	return exports;
