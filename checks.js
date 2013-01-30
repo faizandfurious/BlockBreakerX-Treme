@@ -102,25 +102,25 @@ function checkPowerupHitBar(obj){
             //Make the ball bigger
             if(obj.kind === 0){
                 tempMessage.create("Super-Sized Apple!");
-                ball.w = ball.w*3;
-                ball.h = ball.h*3;
+                ball.w = ball.w*1.5;
+                ball.h = ball.h*1.5;
                 ball.x = ball.x - ball.w/2;
                 ball.y = ball.y - ball.h/2;
                 setTimeout(function(){
                     ball.x = ball.x + ball.w/2;
                     ball.y = ball.y + ball.h/2;
-                    ball.w = ball.w/3;
-                    ball.h = ball.h/3;
+                    ball.w = ball.w/1.5;
+                    ball.h = ball.h/1.5;
                 }, 6000);
             }
 
             //Make the bar bigger
             if(obj.kind === 1){
                 tempMessage.create("Extended Log!");
-                bar.w = bar.w*2;
+                bar.w = bar.w*1.5;
                 bar.x = bar.x + bar.w/2;
                 setTimeout(function(){
-                    bar.w = bar.w/2;
+                    bar.w = bar.w/1.5;
                     bar.x = bar.x + bar.w;
                 }, 6000);
             }

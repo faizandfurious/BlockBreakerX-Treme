@@ -55,23 +55,23 @@ function onMouseDown(event) {
         var widthInstructions = window.ctx.measureText(instructions).width;
         var widthStart = window.ctx.measureText(startString).width;
         if(menu){
-            if (x>startButtonX && x<startButtonX+widthStart && y>buttonY && y< buttonY+buttonHeight) {
+            if (x>startButtonX && x<startButtonX+widthStart+buttonPadding && y>buttonY && y< buttonY+buttonHeight) {
                 initializeBoard();
                 changeLevel(1);
                 playable = true;
             }
-            else if (x>instructionButtonX && x<instructionButtonX+widthInstructions && y>buttonY && y< buttonY+buttonHeight) {
+            else if (x>instructionButtonX && x<instructionButtonX+widthInstructions+buttonPadding && y>buttonY && y< buttonY+buttonHeight) {
                 changeLevel(-1);
             }
         }
         else if(level === -1){
-            if (x>instructionStartButtonX && x<instructionStartButtonX+widthStart && y>buttonY && y< buttonY+buttonHeight) {
+            if (x>instructionStartButtonX && x<instructionStartButtonX+widthStart+buttonPadding && y>buttonY && y< buttonY+buttonHeight) {
                 changeLevel(1);
                 playable = true;
                 initializeBoard();
         }
-        else if(restartable){
-            if (x>instructionStartButtonX && x<instructionStartButtonX+widthStart && y>buttonY && y< buttonY+buttonHeight) {
+        else{
+            if (x>instructionStartButtonX && x<instructionStartButtonX+widthStart+buttonPadding && y>buttonY && y< buttonY+buttonHeight) {
                 changeLevel(1);
                 initializeBoard();
             }
