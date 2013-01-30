@@ -20,14 +20,13 @@ function drawInstructions(){
 
 //animates the move of the background to a different frame
 function moveBackground(frame){
+
 	go = setInterval(function(){
-			var targetHeight = 3600-(frame*600);
-			if (targetHeight < background.sy){
-				background.sy = background.sy - 20;
-			}
-			else if(targetHeight > background.sy){
-				background.sy = background.sy + 20;
-			}}, 5);
+		console.log(background.sy);
+		var targetHeight = 3600-(frame*600);
+		if (targetHeight < background.sy){
+			background.sy = background.sy - 5;
+		}}, 5);
 }
 
 //animates the move of the background to a different frame

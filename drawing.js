@@ -35,6 +35,7 @@ function draw(keyCode) {
 
 	window.ctx.drawImage(background.image,background.sx,background.sy,background.sWidth,
 	background.sHeight,background.dx, background.dy, 600,600);
+
 	window.ctx.font="30px Consolas";
 	//Menu
 	if(level === 0){
@@ -75,15 +76,10 @@ function draw(keyCode) {
 	//The game is won
 	else if(level === 3){
 		menu = true;
-		window.ctx.save();
-		window.ctx.font = 'bold 50px Consolas';
-   		window.ctx.textBaseline = 'bottom';
-		window.ctx.fillStyle = "rgb(100, 100, 100)";
-  		window.ctx.fillText("Game Over!", 200, 350);
-		window.ctx.restore();
 
 		window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
-
+		window.ctx.drawImage(cloud.image,cloud.sx,cloud.winsy,cloud.sWidth,
+		cloud.sHeight,cloud.dx, cloud.dy, 425,306);
 		window.ctx.font="30px Consolas";
 		var widthInstructions = window.ctx.measureText(instructions).width;
 		var widthStart = window.ctx.measureText(startString).width;
@@ -95,12 +91,9 @@ function draw(keyCode) {
 
 	else if(level === 4){
 		menu = true;
-		window.ctx.save();
-		window.ctx.font = 'bold 50px Consolas';
-   		window.ctx.textBaseline = 'bottom';
-		window.ctx.fillStyle = "rgb(100, 100, 100)";
-  		window.ctx.fillText("You Lose!", 200, 350);
-		window.ctx.restore();
+
+		window.ctx.drawImage(cloud.image,cloud.sx,cloud.losesy,cloud.sWidth,
+		cloud.sHeight,cloud.dx, cloud.dy, 425,306);
 
 		window.ctx.fillStyle = "rgba(200, 200, 200, 0.8)";
 

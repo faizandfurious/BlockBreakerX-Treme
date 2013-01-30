@@ -79,6 +79,23 @@ var background = function(){
 	return exports;
 }();
 
+var cloud = function(){
+	var exports = {};
+	exports.image = new Image();
+	exports.sx = 0;
+	exports.winsy = 0;
+	exports.losesy = 306;
+	exports.sWidth = 425;
+	exports.sHeight = 306;
+	exports.dx = 100;
+	exports.dy = 30;
+	exports.dWidth = 425;
+	exports.dHeight = 306;
+	exports.image.src = "assets/cloud.png"
+
+	return exports;
+}();
+
 var life = function(){
 	var exports = {};
 	exports.image = new Image();

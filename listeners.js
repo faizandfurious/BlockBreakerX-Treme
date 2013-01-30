@@ -70,7 +70,7 @@ function onMouseDown(event) {
                 playable = true;
                 initializeBoard();
         }
-        else if(restartable){
+        else{
             if (x>instructionStartButtonX && x<instructionStartButtonX+widthStart && y>buttonY && y< buttonY+buttonHeight) {
                 changeLevel(1);
                 initializeBoard();
