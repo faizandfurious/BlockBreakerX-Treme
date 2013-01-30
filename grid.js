@@ -1,6 +1,6 @@
 //Creating the grid to place boxes into. The grid is represented by a 2x2 array that holds boolean values to 
 //determine if a box is there or not
-function grid(row, col){
+function grid(row, col, unbreakable){
 	var exports = {};
 
 	//Leave space between each block
@@ -40,11 +40,15 @@ function grid(row, col){
 
     //Randomly add powerups to boxes
     var max = row*col/4;
+    var kinds = 3;
+    if(unbreakable){
+        kinds = 4;
+    }
     for(var i = 0; i < max; i++){
         var x = Math.floor(Math.random() * exports.rowNums);
         var y = Math.floor(Math.random() * exports.colNums);
         var rand = arr[x][y];
-        arr[x][y] = new box(rand.x, rand.y, new powerup(rand.x, rand.y, exports.blockWidth, exports.blockHeight, Math.floor((Math.random()*4))));
+        arr[x][y] = new box(rand.x, rand.y, new powerup(rand.x, rand.y, exports.blockWidth, exports.blockHeight, Math.floor((Math.random()*kinds))));
     }
 
     exports.blocks = arr;

@@ -68,7 +68,7 @@ function changeLevel(lvl){
 	//Second Level
 	else if(level === 2){
 		moveBackground(4);
-		gridBoard = new grid(4, 9);
+		gridBoard = new grid(4, 9, true);
 	}
 	//Game Won
 	else if(level === 3){
